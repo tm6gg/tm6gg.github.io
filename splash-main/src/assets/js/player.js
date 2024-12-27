@@ -8,7 +8,7 @@ function toggleRadio() {
         playing = false;
     } else {
         $("#radioButton").removeClass("fa-play").addClass("fa-pause");
-        $("#stream").attr("src", "http://stream.zeno.fm/6kuhxbe5muhvv");
+        $("#stream").attr("src", "https://stream.zeno.fm/jw92zlb8aobvv");
         $("#stream")[0].play();
         $("#statsBar").removeClass('scale-0');
         playing = true;
