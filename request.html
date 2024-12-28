@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paradox Radio - Song Request</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column; /* Keeps the layout intact */
+        }
+
+        /* Main Container */
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .container h1 {
+            font-size: 2rem;
+            color: #ff5733;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: white;
+            background: #ff5733;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #e74c3c;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .footer a {
+            color: #ff5733;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Paradox Radio</h1>
+        <p>Request your favorite songs and we'll play them live!</p>
+        <form id="songRequestForm">
+            <input type="text" id="username" placeholder="Your Name" required />
+            <input type="text" id="songName" placeholder="Song Name" required />
+            <input type="text" id="artistName" placeholder="Artist Name" required />
+            <label>
+                Explicit Content:
+                <input type="checkbox" id="explicit" />
+            </label>
+            <button type="submit">Submit Request</button>
+        </form>
+        <div class="footer">
+            <p>Powered by <a href="https://paradox-radio.me" target="_blank">Paradox Radio</a></p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('songRequestForm');
+        const webhookUrl = 'https://discord.com/api/webhooks/1322358616451317770/zDhaSytMwhavLfYxrdeZR6I9jWosDxIPd2Vxo2IyPQxnkfWZXLQRslTyLjEDNdh_UOJY';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const songName = document.getElementById('songName').value.trim();
+            const artistName = document.getElementById('artistName').value.trim();
+            const isExplicit = document.getElementById('explicit').checked;
+
+            if (!username || !songName || !artistName) {
+                alert("All fields except 'Explicit' are required!");
+                return;
+            }
+
+            const explicitText = isExplicit ? "Yes" : "No";
+
+            const payload = {
+                embeds: [
+                    {
+                        title: "🎵 New Song Request 🎵",
+                        description: `**Song Name:** ${songName}\n**Artist:** ${artistName}\n**Requested By:** ${username}`,
+                        color: 0xFF5733, // Orange color for the embed
+                        fields: [
+                            {
+                                name: "Explicit Content",
+                                value: explicitText,
+                                inline: true
+                            }
+                        ],
+                        footer: {
+                            text: "Powered by tm6 inc",
+                            icon_url: "https://media.discordapp.net/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg?ex=67707729&is=676f25a9&hm=b2b7371d187d1aee5f42a326ce572952d44a0c2a74dfb9a934af9adfc85a79dd&=&format=webp&width=415&height=415" // Optional icon
+                        },
+                        timestamp: new Date().toISOString() // Timestamp of when the request was made
+                    }
+                ]
+            };
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) {
+                    alert("Your song request has been sent!");
+                    form.reset(); // Keeps the layout intact after submission
+                } else {
+                    alert("Failed to send your request. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error sending request:", error);
+                alert("An error occurred. Please try again.");
+            }
+        });
+    </script>
+</body>
+</html>
