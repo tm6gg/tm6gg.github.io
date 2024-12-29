@@ -18,7 +18,8 @@
     <title>Paradox Radio</title>
 </head>
 
-<body class="bg-slate-50 text-black dark:bg-slate-900 dark:text-white transition-all">
+<body class="bg-slate-900 text-white transition-all">
+
     <div id="notification" class="notification scale-0">
         <div>
             <span id="notificationText"></span>
@@ -26,9 +27,7 @@
     </div>
 
     <div id="bottomButtons" class="absolute bottom-0 right-0 m-2 text-right transition-all">
-        <div>
-            <button class="button" onclick="toggleTheme()">Switch Theme</button>
-        </div>
+        <!-- Removed the theme switcher -->
     </div>
 
     <div id="content" class="flex flex-col h-screen transition-all">
@@ -65,8 +64,9 @@
             <p>
                 <span class="font-bold">Version: </span><span id="presenter">1.2.0 Full</span>
             </p>
+            <!-- Removed the old request link -->
             <p>
-                <span class="font-bold"><a href="https://paradox-radio.me/request" id="openRequestButton">Request Song</a></span>
+                <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton">Request Song</a></span>
             </p>
         </div>
 
@@ -81,7 +81,7 @@
 
     <!-- Request Popup -->
     <div id="popupOverlay" style="display:none;">
-        <div id="requestPopup" style="background:#fff; padding:20px; border-radius:8px; text-align:center;">
+        <div id="requestPopup" style="background:#333; color:white; padding:20px; border-radius:8px; text-align:center;">
             <h2>Request a Song</h2>
             <input type="text" id="songTitle" placeholder="Enter song title" style="width: 100%; margin-bottom:10px; padding:8px;" />
             <input type="text" id="songArtist" placeholder="Enter artist name" style="width: 100%; margin-bottom:10px; padding:8px;" />
@@ -91,17 +91,18 @@
     </div>
 
     <script>
+        // Open request popup when the "Request Song" button is clicked
         const openRequestButton = document.getElementById("openRequestButton");
         const popupOverlay = document.getElementById("popupOverlay");
         const closePopupButton = document.getElementById("closePopupButton");
         const sendRequestButton = document.getElementById("sendRequestButton");
 
         openRequestButton.addEventListener("click", () => {
-            popupOverlay.style.display = "block";
+            popupOverlay.style.display = "block"; // Show popup
         });
 
         closePopupButton.addEventListener("click", () => {
-            popupOverlay.style.display = "none";
+            popupOverlay.style.display = "none"; // Close popup
         });
 
         sendRequestButton.addEventListener("click", () => {
@@ -113,7 +114,7 @@
                 return;
             }
 
-            const webhookURL = "https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc";
+            const webhookURL = "https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc"; // Replace with your webhook
             const payload = {
                 content: `🎵 Song Request:\n**Title:** ${songTitle}\n**Artist:** ${songArtist}`,
             };
@@ -126,7 +127,7 @@
             .then(() => alert("Request sent!"))
             .catch((error) => console.error("Error sending request:", error));
 
-            popupOverlay.style.display = "none";
+            popupOverlay.style.display = "none"; // Close the popup after sending the request
         });
     </script>
 </body>
