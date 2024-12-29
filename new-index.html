@@ -2,19 +2,25 @@
 <html lang="en" dir="ltr">
 
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
-        crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon"
-        href="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
+     crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg?ex=676f25a9&is=676dd429&hm=29ad0a042d13c318c7321543ebd5b491ae39d29b758a8d304f8124615f83dd3b&">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Paradox Radio">
-    <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
-    <meta name="author" content="RadioEurope">
+  <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
+  <meta name="author" content="RadioEurope">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="splash-main/src/assets/css/style.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/splash-main/src/assets/js/notification.js"></script>
+    <script src="/splash-main/src/assets/js/theme.js"></script>
+    <script src="/splash-main/src/assets/js/player.js"></script>
+    <script src="/splash-main/src/assets/js/models.js"></script>
+    <script src="/splash-main/src/assets/js/apis.js"></script>
     <title>Paradox Radio</title>
+
     <style>
         /* Popup styles */
         #popupOverlay {
@@ -82,14 +88,11 @@
                 <div class="dark:bg-slate-800 bg-slate-200 p-1 rounded w-[264px]">
                     <div class="grid gap-1 grid-cols-2 grid-rows-1">
                         <div>
-                            <img id="cover"
-                                src="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg"
-                                class="h-32 w-32 rounded shadow float-right"
-                                onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
+                            <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg"
+                                class="h-32 w-32 rounded shadow float-right" onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
                         </div>
                         <div>
-                            <img id="presenterAvatar"
-                                src="https://media.discordapp.net/attachments/1207043446938804225/1322106358849339462/Screenshot_2024-12-25_121634.png"
+                            <img id="presenterAvatar" src="https://media.discordapp.net/attachments/1207043446938804225/1322106358849339462/Screenshot_2024-12-25_121634.png?ex=676faaff&is=676e597f&hm=aca8c21268d1b3729eb6b21efb93c31442758f37856892947731734a00fc551c&"
                                 class="h-32 w-32 rounded" onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
                         </div>
                     </div>
@@ -103,20 +106,35 @@
             <p>
                 <span class="font-bold"><a href="https://twitter.com/tm6_gg">Created with ❤️ by tm6</a></span>
             </p>
-            <p>
-                <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
+          <p> 
+         <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
             </p>
             <p>
-                <span class="font-bold"><a href="https://paradox-radio.me/request" target="_blank">Request Song (NOW WORKING!!!)</a></span>
+                <span class="font-bold"><a href="https://paradox-radio.me">Status: </span><span id="presenter">Good </span>
+            </p>
+          <p>
+                <span class="font-bold">Version: </span><span id="presenter">1.2.0 Full  <a href="https://twitter.com/tm6_gg"> </a></span>
+        <br>
+        <span class="font-bold">
+    <a href="https://paradox-radio.me/request" target="_blank">Request Song (NOW WORKING!!!)</a>
+</span>
+
             </p>
         </div>
         <div class="text-center m-auto mt-1">
+            <div class="hidden">
+                <audio id="stream" src=""></audio>
+            </div>
             <div>
+                <div class="scale-0 transition-all max-w-md" id="statsBar">
+                    <input type="range" id="volume" class="max-w-sm form-range" min="0" max="1" step="0.01" oninput="updateVolume()"/>
+                </div>
                 <p class="text-4xl hover:scale-105 transition-all">
                     <button id="radioButton" class="fa-solid fa-play" onclick="toggleRadio()"></button>
                 </p>
             </div>
         </div>
+        <!-- New Request Song Button -->
         <div>
             <button id="openRequestButton" class="button">Request a Song</button>
         </div>
@@ -134,10 +152,10 @@
     </div>
 
     <script>
+        // Show Popup on Request Button Click
         const openRequestButton = document.getElementById("openRequestButton");
         const popupOverlay = document.getElementById("popupOverlay");
         const closePopupButton = document.getElementById("closePopupButton");
-        const sendRequestButton = document.getElementById("sendRequestButton");
 
         openRequestButton.addEventListener("click", () => {
             popupOverlay.style.display = "block";
@@ -147,6 +165,8 @@
             popupOverlay.style.display = "none";
         });
 
+        // Send Request Button Logic
+        const sendRequestButton = document.getElementById("sendRequestButton");
         sendRequestButton.addEventListener("click", () => {
             const songTitle = document.getElementById("songTitle").value;
             const songArtist = document.getElementById("songArtist").value;
@@ -156,51 +176,21 @@
                 return;
             }
 
+            // Replace with your actual webhook URL
             const webhookURL = "https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc";
-            const embed = {
-                embeds: [
-                    {
-                        title: "🎵 Song Request",
-                        fields: [
-                            { name: "Title", value: songTitle },
-                            { name: "Artist", value: songArtist },
-                        ],
-                        color: 0x7289da, // Discord embed blue
-                    },
-                ],
+            const payload = {
+                content: `🎵 Song Request:\n**Title:** ${songTitle}\n**Artist:** ${songArtist}`,
             };
 
             fetch(webhookURL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(embed),
+                body: JSON.stringify(payload),
             })
-                .then(() => alert("Request sent!"))
-                .catch((error) => console.error("Error sending request:", error));
+            .then(() => alert("Request sent!"))
+            .catch((error) => console.error("Error sending request:", error));
 
             popupOverlay.style.display = "none";
-        });
-
-        // Theme toggle
-        function toggleTheme() {
-            const currentTheme = document.body.classList.contains("dark") ? "dark" : "light";
-            if (currentTheme === "dark") {
-                document.body.classList.remove("dark");
-                localStorage.setItem("theme", "light");
-            } else {
-                document.body.classList.add("dark");
-                localStorage.setItem("theme", "dark");
-            }
-        }
-
-        // Load the theme from localStorage (if set previously)
-        document.addEventListener("DOMContentLoaded", () => {
-            const savedTheme = localStorage.getItem("theme");
-            if (savedTheme === "dark") {
-                document.body.classList.add("dark");
-            } else {
-                document.body.classList.remove("dark");
-            }
         });
     </script>
 </body>
