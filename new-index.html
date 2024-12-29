@@ -73,6 +73,8 @@
             margin-bottom: 10px;
             border-radius: 5px;
             border: 1px solid #555;
+            background-color: #444; /* Darker background for inputs */
+            color: white; /* Light text color */
         }
 
         #sendRequestButton, #closePopupButton {
@@ -166,45 +168,26 @@
 
     <script>
         // Open request popup when the "Request Song" button is clicked
-        const openRequestButton = document.getElementById("openRequestButton");
-        const popupOverlay = document.getElementById("popupOverlay");
-        const closePopupButton = document.getElementById("closePopupButton");
-        const sendRequestButton = document.getElementById("sendRequestButton");
-
-        openRequestButton.addEventListener("click", () => {
-            popupOverlay.style.display = "flex"; // Show popup
+        document.getElementById("openRequestButton").addEventListener("click", function () {
+            document.getElementById("popupOverlay").style.display = "flex";
         });
 
-        closePopupButton.addEventListener("click", () => {
-            popupOverlay.style.display = "none"; // Close popup
+        // Close the popup when the "Close" button is clicked
+        document.getElementById("closePopupButton").addEventListener("click", function () {
+            document.getElementById("popupOverlay").style.display = "none";
         });
 
-        sendRequestButton.addEventListener("click", () => {
-            const songTitle = document.getElementById("songTitle").value;
-            const songArtist = document.getElementById("songArtist").value;
-
-            if (!songTitle || !songArtist) {
-                alert("Please fill out both fields!");
-                return;
+        // Handle the send request button click
+        document.getElementById("sendRequestButton").addEventListener("click", function () {
+            const title = document.getElementById("songTitle").value;
+            const artist = document.getElementById("songArtist").value;
+            if (title && artist) {
+                alert("Song request for '" + title + "' by " + artist + " has been sent!");
+            } else {
+                alert("Please enter both song title and artist.");
             }
-
-            const webhookURL = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL_HERE"; // Replace with your webhook
-            const payload = {
-                content: `🎵 Song Request:\n**Title:** ${songTitle}\n**Artist:** ${songArtist}`,
-            };
-
-            fetch(webhookURL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            })
-            .then(() => alert("Request sent!"))
-            .catch((error) => console.error("Error sending request:", error));
-
-            popupOverlay.style.display = "none"; // Close the popup after sending the request
         });
     </script>
 
 </body>
-
 </html>
