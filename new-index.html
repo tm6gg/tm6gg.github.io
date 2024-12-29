@@ -2,72 +2,20 @@
 <html lang="en" dir="ltr">
 
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
-     crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg?ex=676f25a9&is=676dd429&hm=29ad0a042d13c318c7321543ebd5b491ae39d29b758a8d304f8124615f83dd3b&">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
+        crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon"
+        href="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg?ex=676f25a9&is=676dd429&hm=29ad0a042d13c318c7321543ebd5b491ae39d29b758a8d304f8124615f83dd3b&">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Paradox Radio">
-  <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
-  <meta name="author" content="RadioEurope">
+    <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
+    <meta name="author" content="RadioEurope">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="splash-main/src/assets/css/style.css" />
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="/splash-main/src/assets/js/notification.js"></script>
-    <script src="/splash-main/src/assets/js/theme.js"></script>
-    <script src="/splash-main/src/assets/js/player.js"></script>
-    <script src="/splash-main/src/assets/js/models.js"></script>
-    <script src="/splash-main/src/assets/js/apis.js"></script>
     <title>Paradox Radio</title>
-
-    <style>
-        /* Popup styles */
-        #popupOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 1000;
-        }
-
-        #requestPopup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
-            z-index: 1001;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-
-        #requestPopup input,
-        #requestPopup button {
-            width: 90%;
-            margin: 10px 0;
-            padding: 8px;
-            font-size: 1rem;
-        }
-
-        #requestPopup button {
-            background: #ff5733;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        #requestPopup button:hover {
-            background: #e74c3c;
-        }
-    </style>
 </head>
 
 <body class="bg-slate-50 text-black dark:bg-slate-900 dark:text-white transition-all">
@@ -76,12 +24,13 @@
             <span id="notificationText"></span>
         </div>
     </div>
-    <div id="topButtons" class="absolute top-0 right-0 m-2 text-right transition-all"></div>
+
     <div id="bottomButtons" class="absolute bottom-0 right-0 m-2 text-right transition-all">
         <div>
             <button class="button" onclick="toggleTheme()">Switch Theme</button>
         </div>
     </div>
+
     <div id="content" class="flex flex-col h-screen transition-all">
         <div class="text-center m-auto mb-0">
             <div>
@@ -99,6 +48,7 @@
                 </div>
             </div>
         </div>
+
         <div class="mt-2 text-center">
             <p>
                 <span class="font-bold"><a href="https://discord.gg/anKpgvGWMX">Discord</a></span>
@@ -106,56 +56,45 @@
             <p>
                 <span class="font-bold"><a href="https://twitter.com/tm6_gg">Created with ❤️ by tm6</a></span>
             </p>
-          <p> 
-         <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
+            <p>
+                <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
             </p>
             <p>
                 <span class="font-bold"><a href="https://paradox-radio.me">Status: </span><span id="presenter">Good </span>
             </p>
-          <p>
-                <span class="font-bold">Version: </span><span id="presenter">1.2.0 Full  <a href="https://twitter.com/tm6_gg"> </a></span>
-        <br>
-        <span class="font-bold">
-    <a href="https://paradox-radio.me/request" target="_blank">Request Song (NOW WORKING!!!)</a>
-</span>
-
+            <p>
+                <span class="font-bold">Version: </span><span id="presenter">1.2.0 Full</span>
+            </p>
+            <p>
+                <span class="font-bold"><a href="https://paradox-radio.me/request" id="openRequestButton">Request Song</a></span>
             </p>
         </div>
+
         <div class="text-center m-auto mt-1">
-            <div class="hidden">
-                <audio id="stream" src=""></audio>
-            </div>
             <div>
-                <div class="scale-0 transition-all max-w-md" id="statsBar">
-                    <input type="range" id="volume" class="max-w-sm form-range" min="0" max="1" step="0.01" oninput="updateVolume()"/>
-                </div>
                 <p class="text-4xl hover:scale-105 transition-all">
                     <button id="radioButton" class="fa-solid fa-play" onclick="toggleRadio()"></button>
                 </p>
             </div>
         </div>
-        <!-- New Request Song Button -->
-        <div>
-            <button id="openRequestButton" class="button">Request a Song</button>
-        </div>
     </div>
 
     <!-- Request Popup -->
-    <div id="popupOverlay">
-        <div id="requestPopup">
+    <div id="popupOverlay" style="display:none;">
+        <div id="requestPopup" style="background:#fff; padding:20px; border-radius:8px; text-align:center;">
             <h2>Request a Song</h2>
-            <input type="text" id="songTitle" placeholder="Enter song title" />
-            <input type="text" id="songArtist" placeholder="Enter artist name" />
-            <button id="sendRequestButton">Send Request</button>
-            <button id="closePopupButton">Close</button>
+            <input type="text" id="songTitle" placeholder="Enter song title" style="width: 100%; margin-bottom:10px; padding:8px;" />
+            <input type="text" id="songArtist" placeholder="Enter artist name" style="width: 100%; margin-bottom:10px; padding:8px;" />
+            <button id="sendRequestButton" style="background:#ff5733; color:white; padding:10px 20px;">Send Request</button>
+            <button id="closePopupButton" style="background:#e74c3c; color:white; padding:10px 20px; margin-top:10px;">Close</button>
         </div>
     </div>
 
     <script>
-        // Show Popup on Request Button Click
         const openRequestButton = document.getElementById("openRequestButton");
         const popupOverlay = document.getElementById("popupOverlay");
         const closePopupButton = document.getElementById("closePopupButton");
+        const sendRequestButton = document.getElementById("sendRequestButton");
 
         openRequestButton.addEventListener("click", () => {
             popupOverlay.style.display = "block";
@@ -165,8 +104,6 @@
             popupOverlay.style.display = "none";
         });
 
-        // Send Request Button Logic
-        const sendRequestButton = document.getElementById("sendRequestButton");
         sendRequestButton.addEventListener("click", () => {
             const songTitle = document.getElementById("songTitle").value;
             const songArtist = document.getElementById("songArtist").value;
@@ -176,7 +113,6 @@
                 return;
             }
 
-            // Replace with your actual webhook URL
             const webhookURL = "https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc";
             const payload = {
                 content: `🎵 Song Request:\n**Title:** ${songTitle}\n**Artist:** ${songArtist}`,
