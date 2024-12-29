@@ -26,10 +26,6 @@
         </div>
     </div>
 
-    <div id="bottomButtons" class="absolute bottom-0 right-0 m-2 text-right transition-all">
-        <!-- Removed the theme switcher -->
-    </div>
-
     <div id="content" class="flex flex-col h-screen transition-all">
         <div class="text-center m-auto mb-0">
             <div>
@@ -64,9 +60,9 @@
             <p>
                 <span class="font-bold">Version: </span><span id="presenter">1.2.0 Full</span>
             </p>
-            <!-- Removed the old request link -->
+            <!-- Request Song button -->
             <p>
-                <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton">Request Song</a></span>
+                <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton" style="color: #ff5733; font-size: 20px;">Request Song</a></span>
             </p>
         </div>
 
@@ -114,7 +110,7 @@
                 return;
             }
 
-            const webhookURL = "https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc"; // Replace with your webhook
+            const webhookURL = "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL_HERE"; // Replace with your webhook
             const payload = {
                 content: `🎵 Song Request:\n**Title:** ${songTitle}\n**Artist:** ${songArtist}`,
             };
