@@ -67,7 +67,7 @@
         }
 
         /* Style the input and button */
-        #songTitle, #songArtist {
+        #songTitle, #songArtist, #userName, #userMessage {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
@@ -161,12 +161,17 @@
             <h2>Request a Song</h2>
             <input type="text" id="songTitle" placeholder="Enter song title" />
             <input type="text" id="songArtist" placeholder="Enter artist name" />
+            <input type="text" id="userName" placeholder="Enter your name" />
+            <textarea id="userMessage" placeholder="Message (optional)" rows="3"></textarea>
             <button id="sendRequestButton">Send Request</button>
             <button id="closePopupButton">Close</button>
         </div>
     </div>
 
     <script>
+        // Webhook URL (Replace with your actual webhook URL)
+        const webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
+
         // Open request popup when the "Request Song" button is clicked
         document.getElementById("openRequestButton").addEventListener("click", function () {
             document.getElementById("popupOverlay").style.display = "flex";
@@ -181,13 +186,63 @@
         document.getElementById("sendRequestButton").addEventListener("click", function () {
             const title = document.getElementById("songTitle").value;
             const artist = document.getElementById("songArtist").value;
-            if (title && artist) {
-                alert("Song request for '" + title + "' by " + artist + " has been sent!");
+            const userName = document.getElementById("userName").value;
+            const userMessage = document.getElementById("userMessage").value;
+
+            if (title && artist && userName) {
+                // Create the embed for Discord
+                const embed = {
+                    title: "New Song Request",
+                    color: 16711680, // Red color
+                    fields: [
+                        {
+                            name: "Song Title",
+                            value: title
+                        },
+                        {
+                            name: "Artist",
+                            value: artist
+                        },
+                        {
+                            name: "Requested by",
+                            value: userName
+                        },
+                        {
+                            name: "Message",
+                            value: userMessage || "No message provided"
+                        }
+                    ],
+                    footer: {
+                        text: "Paradox Radio"
+                    }
+                };
+
+                // Send the request to Discord webhook
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ embeds: [embed] })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("Your song request has been sent!");
+                        document.getElementById("popupOverlay").style.display = "none";
+                    } else {
+                        alert("There was an error sending your request.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("There was an error sending your request.");
+                });
             } else {
-                alert("Please enter both song title and artist.");
+                alert("Please fill in all required fields.");
             }
         });
     </script>
 
 </body>
+
 </html>
