@@ -180,6 +180,28 @@
 
             popupOverlay.style.display = "none";
         });
+
+        // Theme toggle
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains("dark") ? "dark" : "light";
+            if (currentTheme === "dark") {
+                document.body.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+            } else {
+                document.body.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+            }
+        }
+
+        // Load the theme from localStorage (if set previously)
+        document.addEventListener("DOMContentLoaded", () => {
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark");
+            } else {
+                document.body.classList.remove("dark");
+            }
+        });
     </script>
 </body>
 
