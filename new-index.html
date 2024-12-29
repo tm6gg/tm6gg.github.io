@@ -21,25 +21,77 @@
         body {
             background-color: #1a202c; /* Dark background color */
             color: white; /* Light text color */
+            margin: 0;
+            padding: 0;
         }
+
         /* Modify other page elements for dark mode */
         .bg-slate-50 {
             background-color: #1a202c !important; /* Dark slate background */
         }
+
         .dark\:bg-slate-900 {
             background-color: #2d3748 !important; /* Even darker background for specific elements */
         }
+
         .text-black, .dark\:text-white {
             color: white !important; /* Light text */
         }
+
         .bg-slate-200 {
             background-color: #2d3748 !important; /* Dark slate background */
         }
+
         /* Additional styling for dark elements */
         #requestPopup {
             background: #333;
             color: white;
             border-radius: 8px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        /* Make sure the popup overlay covers the full viewport */
+        #popupOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            display: none;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            z-index: 9999; /* Ensure it stays above other content */
+        }
+
+        /* Style the input and button */
+        #songTitle, #songArtist {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #555;
+        }
+
+        #sendRequestButton, #closePopupButton {
+            background: #ff5733;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #closePopupButton {
+            background: #e74c3c;
+            margin-top: 10px;
+        }
+
+        /* Add hover effect for buttons */
+        #sendRequestButton:hover, #closePopupButton:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -102,13 +154,13 @@
     </div>
 
     <!-- Request Popup -->
-    <div id="popupOverlay" style="display:none;">
-        <div id="requestPopup" style="padding:20px; text-align:center;">
+    <div id="popupOverlay">
+        <div id="requestPopup">
             <h2>Request a Song</h2>
-            <input type="text" id="songTitle" placeholder="Enter song title" style="width: 100%; margin-bottom:10px; padding:8px;" />
-            <input type="text" id="songArtist" placeholder="Enter artist name" style="width: 100%; margin-bottom:10px; padding:8px;" />
-            <button id="sendRequestButton" style="background:#ff5733; color:white; padding:10px 20px;">Send Request</button>
-            <button id="closePopupButton" style="background:#e74c3c; color:white; padding:10px 20px; margin-top:10px;">Close</button>
+            <input type="text" id="songTitle" placeholder="Enter song title" />
+            <input type="text" id="songArtist" placeholder="Enter artist name" />
+            <button id="sendRequestButton">Send Request</button>
+            <button id="closePopupButton">Close</button>
         </div>
     </div>
 
@@ -120,7 +172,7 @@
         const sendRequestButton = document.getElementById("sendRequestButton");
 
         openRequestButton.addEventListener("click", () => {
-            popupOverlay.style.display = "block"; // Show popup
+            popupOverlay.style.display = "flex"; // Show popup
         });
 
         closePopupButton.addEventListener("click", () => {
