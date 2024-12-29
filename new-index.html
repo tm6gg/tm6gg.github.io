@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
+        crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon"
+        href="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Paradox Radio">
+    <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
+    <meta name="author" content="RadioEurope">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="splash-main/src/assets/css/style.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="/splash-main/src/assets/js/notification.js"></script>
+    <script src="/splash-main/src/assets/js/theme.js"></script>
+    <script src="/splash-main/src/assets/js/player.js"></script>
+    <script src="/splash-main/src/assets/js/models.js"></script>
+    <script src="/splash-main/src/assets/js/apis.js"></script>
+    <title>Paradox Radio</title>
+    <style>
+        /* Popup styles */
+        #requestPopup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        #requestPopup form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #requestPopup input,
+        #requestPopup button {
+            margin: 5px 0;
+            padding: 10px;
+        }
+
+        #popupOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-black dark:bg-slate-900 dark:text-white transition-all">
+    <div id="notification" class="notification scale-0">
+        <div>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
+    <!-- Song Request Button -->
+    <div class="text-center">
+        <button class="button" onclick="showRequestPopup()">Request a Song</button>
+    </div>
+
+    <!-- Song Request Popup -->
+    <div id="popupOverlay" onclick="hideRequestPopup()"></div>
+    <div id="requestPopup">
+        <h2>Request a Song</h2>
+        <form id="requestForm" onsubmit="submitSongRequest(event)">
+            <input type="text" id="songTitle" placeholder="Song Title" required />
+            <input type="text" id="artistName" placeholder="Artist Name" required />
+            <textarea id="message" placeholder="Optional Message"></textarea>
+            <button type="submit">Send Request</button>
+            <button type="button" onclick="hideRequestPopup()">Cancel</button>
+        </form>
+    </div>
+
+    <!-- Rest of the Content -->
+    <div id="content" class="flex flex-col h-screen transition-all">
+        <!-- Your existing content here -->
+    </div>
+
+    <script>
+        // Webhook URL (replace with your webhook URL)
+        const webhookUrl = "https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc";
+
+        // Show the request popup
+        function showRequestPopup() {
+            document.getElementById('popupOverlay').style.display = 'block';
+            document.getElementById('requestPopup').style.display = 'block';
+        }
+
+        // Hide the request popup
+        function hideRequestPopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+            document.getElementById('requestPopup').style.display = 'none';
+        }
+
+        // Submit the song request
+        async function submitSongRequest(event) {
+            event.preventDefault();
+
+            const songTitle = document.getElementById('songTitle').value;
+            const artistName = document.getElementById('artistName').value;
+            const message = document.getElementById('message').value;
+
+            const payload = {
+                content: `🎵 **New Song Request** 🎵\n**Song Title:** ${songTitle}\n**Artist Name:** ${artistName}\n**Message:** ${message || 'No additional message'}`,
+            };
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (response.ok) {
+                    alert('Song request sent successfully!');
+                    hideRequestPopup();
+                } else {
+                    alert('Failed to send the song request. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error sending song request:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+    </script>
+</body>
+
+</html>
