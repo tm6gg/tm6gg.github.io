@@ -16,19 +16,106 @@
     <link rel="stylesheet" href="splash-main/src/assets/css/style.css" />
     <title>Paradox Radio</title>
     <style>
-        /* Same styles as before for popup and buttons */
+        /* Popup styles */
+        #popupOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        #requestPopup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            z-index: 1001;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        #requestPopup input,
+        #requestPopup button {
+            width: 90%;
+            margin: 10px 0;
+            padding: 8px;
+            font-size: 1rem;
+        }
+
+        #requestPopup button {
+            background: #ff5733;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #requestPopup button:hover {
+            background: #e74c3c;
+        }
     </style>
 </head>
 
 <body class="bg-slate-50 text-black dark:bg-slate-900 dark:text-white transition-all">
+    <div id="notification" class="notification scale-0">
+        <div>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+    <div id="topButtons" class="absolute top-0 right-0 m-2 text-right transition-all"></div>
+    <div id="bottomButtons" class="absolute bottom-0 right-0 m-2 text-right transition-all">
+        <div>
+            <button class="button" onclick="toggleTheme()">Switch Theme</button>
+        </div>
+    </div>
     <div id="content" class="flex flex-col h-screen transition-all">
         <div class="text-center m-auto mb-0">
-            <!-- Radio content -->
+            <div>
+                <div class="dark:bg-slate-800 bg-slate-200 p-1 rounded w-[264px]">
+                    <div class="grid gap-1 grid-cols-2 grid-rows-1">
+                        <div>
+                            <img id="cover"
+                                src="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg"
+                                class="h-32 w-32 rounded shadow float-right"
+                                onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
+                        </div>
+                        <div>
+                            <img id="presenterAvatar"
+                                src="https://media.discordapp.net/attachments/1207043446938804225/1322106358849339462/Screenshot_2024-12-25_121634.png"
+                                class="h-32 w-32 rounded" onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div>
-            <!-- Embed section -->
-            <iframe src="https://discord.com/widget?id=YOUR_DISCORD_SERVER_ID&theme=dark"
-                width="350" height="500" allowtransparency="true" frameborder="0"></iframe>
+        <div class="mt-2 text-center">
+            <p>
+                <span class="font-bold"><a href="https://discord.gg/anKpgvGWMX">Discord</a></span>
+            </p>
+            <p>
+                <span class="font-bold"><a href="https://twitter.com/tm6_gg">Created with ❤️ by tm6</a></span>
+            </p>
+            <p>
+                <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
+            </p>
+            <p>
+                <span class="font-bold"><a href="https://paradox-radio.me/request" target="_blank">Request Song (NOW WORKING!!!)</a></span>
+            </p>
+        </div>
+        <div class="text-center m-auto mt-1">
+            <div>
+                <p class="text-4xl hover:scale-105 transition-all">
+                    <button id="radioButton" class="fa-solid fa-play" onclick="toggleRadio()"></button>
+                </p>
+            </div>
         </div>
         <div>
             <button id="openRequestButton" class="button">Request a Song</button>
@@ -47,28 +134,51 @@
     </div>
 
     <script>
-        // Simplified JavaScript for popup
-        document.getElementById("openRequestButton").addEventListener("click", () => {
-            document.getElementById("popupOverlay").style.display = "block";
+        const openRequestButton = document.getElementById("openRequestButton");
+        const popupOverlay = document.getElementById("popupOverlay");
+        const closePopupButton = document.getElementById("closePopupButton");
+        const sendRequestButton = document.getElementById("sendRequestButton");
+
+        openRequestButton.addEventListener("click", () => {
+            popupOverlay.style.display = "block";
         });
-        document.getElementById("closePopupButton").addEventListener("click", () => {
-            document.getElementById("popupOverlay").style.display = "none";
+
+        closePopupButton.addEventListener("click", () => {
+            popupOverlay.style.display = "none";
         });
-        document.getElementById("sendRequestButton").addEventListener("click", () => {
+
+        sendRequestButton.addEventListener("click", () => {
             const songTitle = document.getElementById("songTitle").value;
             const songArtist = document.getElementById("songArtist").value;
+
             if (!songTitle || !songArtist) {
                 alert("Please fill out both fields!");
                 return;
             }
-            fetch("https://discord.com/api/webhooks/YOUR_WEBHOOK_URL", {
+
+            const webhookURL = "https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc";
+            const embed = {
+                embeds: [
+                    {
+                        title: "🎵 Song Request",
+                        fields: [
+                            { name: "Title", value: songTitle },
+                            { name: "Artist", value: songArtist },
+                        ],
+                        color: 0x7289da, // Discord embed blue
+                    },
+                ],
+            };
+
+            fetch(webhookURL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ content: `🎵 Song Request:\n**Title:** ${songTitle}\n**Artist:** ${songArtist}` }),
+                body: JSON.stringify(embed),
             })
                 .then(() => alert("Request sent!"))
-                .catch((error) => console.error("Error:", error));
-            document.getElementById("popupOverlay").style.display = "none";
+                .catch((error) => console.error("Error sending request:", error));
+
+            popupOverlay.style.display = "none";
         });
     </script>
 </body>
