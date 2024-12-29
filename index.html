@@ -5,7 +5,7 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
         crossorigin="anonymous"></script>
     <link rel="icon" type="image/x-icon"
-        href="https://cdn.discordapp.com/attachments/1231623334186451055/1321963190451441673/PR-logo-design-Graphics-31862184-1.jpg?ex=676f25a9&is=676dd429&hm=29ad0a042d13c318c7321543ebd5b491ae39d29b758a8d304f8124615f83dd3b&">
+        href="PR-logo-design-Graphics-31862184-1 (1).jpg">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,30 +13,36 @@
     <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
     <meta name="author" content="RadioEurope">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="splash-main/src/assets/css/style.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Paradox Radio</title>
     <style>
         /* Force dark mode */
         body {
-            background-color: #1a202c;
-            color: white;
+            background-color: #1a202c; /* Dark background color */
+            color: white; /* Light text color */
             margin: 0;
             padding: 0;
         }
 
-        /* Popup styling */
-        #popupOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
+        /* Modify other page elements for dark mode */
+        .bg-slate-50 {
+            background-color: #1a202c !important; /* Dark slate background */
         }
 
+        .dark\:bg-slate-900 {
+            background-color: #2d3748 !important; /* Even darker background for specific elements */
+        }
+
+        .text-black, .dark\:text-white {
+            color: white !important; /* Light text */
+        }
+
+        .bg-slate-200 {
+            background-color: #2d3748 !important; /* Dark slate background */
+        }
+
+        /* Additional styling for dark elements */
         #requestPopup {
             background: #333;
             color: white;
@@ -46,14 +52,29 @@
             text-align: center;
         }
 
+        /* Make sure the popup overlay covers the full viewport */
+        #popupOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            display: none;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            z-index: 9999; /* Ensure it stays above other content */
+        }
+
+        /* Style the input and button */
         #songTitle, #songArtist, #userName, #userMessage {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
             border-radius: 5px;
             border: 1px solid #555;
-            background-color: #444;
-            color: white;
+            background-color: #444; /* Darker background for inputs */
+            color: white; /* Light text color */
         }
 
         #sendRequestButton, #closePopupButton {
@@ -70,25 +91,21 @@
             margin-top: 10px;
         }
 
+        /* Add hover effect for buttons */
         #sendRequestButton:hover, #closePopupButton:hover {
             opacity: 0.8;
-        }
-
-        .text-4xl {
-            font-size: 2.5rem;
-            cursor: pointer;
-        }
-
-        .text-4xl:hover {
-            transform: scale(1.1);
-            transition: all 0.2s;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Main Content -->
+    <div id="notification" class="notification scale-0">
+        <div>
+            <span id="notificationText"></span>
+        </div>
+    </div>
+
     <div id="content" class="flex flex-col h-screen transition-all">
         <div class="text-center m-auto mb-0">
             <div>
@@ -99,7 +116,7 @@
                                 class="h-32 w-32 rounded shadow float-right" onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
                         </div>
                         <div>
-                            <img id="presenterAvatar" src="https://media.discordapp.net/attachments/1207043446938804225/1322106358849339462/Screenshot_2024-12-25_121634.png?ex=676faaff&is=676e597f&hm=aca8c21268d1b3729eb6b21efb93c31442758f37856892947731734a00fc551c&"
+                            <img id="presenterAvatar" src="Screenshot_2024-12-25_121634.webp"
                                 class="h-32 w-32 rounded" onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
                         </div>
                     </div>
@@ -115,7 +132,13 @@
                 <span class="font-bold"><a href="https://twitter.com/tm6_gg">Created with ❤️ by tm6</a></span>
             </p>
             <p>
-                <span class="font-bold">Version: 1.2.0 Full</span>
+                <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
+            </p>
+            <p>
+                <span class="font-bold"><a href="https://paradox-radio.me">Status: </span><span id="presenter">Good </span>
+            </p>
+            <p>
+                <span class="font-bold">Version: </span><span id="presenter">1.5 - Added new request system! try it!</span>
             </p>
             <!-- Request Song button -->
             <p>
@@ -145,13 +168,13 @@
         </div>
     </div>
 
-    <audio id="stream" src="https://your-stream-url.com/stream.mp3"></audio>
+    <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv.m3u" preload="auto"></audio>
 
     <script>
-        // Webhook URL (replace with your webhook)
-        const webhookURL = 'https://discord.com/api/webhooks/your-webhook-id/your-webhook-token';
+        // Webhook URL (Replace with your actual webhook URL)
+        const webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
 
-        // Toggle audio playback
+        // Toggle radio play/pause
         function toggleRadio() {
             const stream = document.getElementById('stream');
             const button = document.getElementById('radioButton');
@@ -171,52 +194,77 @@
             }
         }
 
-        // Open/Close popup
-        document.getElementById("openRequestButton").addEventListener("click", () => {
+        // Open request popup when the "Request Song" button is clicked
+        document.getElementById("openRequestButton").addEventListener("click", function () {
             document.getElementById("popupOverlay").style.display = "flex";
         });
 
-        document.getElementById("closePopupButton").addEventListener("click", () => {
+        // Close the popup when the "Close" button is clicked
+        document.getElementById("closePopupButton").addEventListener("click", function () {
             document.getElementById("popupOverlay").style.display = "none";
         });
 
-        // Send song request
-        document.getElementById("sendRequestButton").addEventListener("click", () => {
+        // Handle the send request button click
+        document.getElementById("sendRequestButton").addEventListener("click", function () {
             const title = document.getElementById("songTitle").value;
             const artist = document.getElementById("songArtist").value;
             const userName = document.getElementById("userName").value;
             const userMessage = document.getElementById("userMessage").value;
 
             if (title && artist && userName) {
+                // Create the embed for Discord
                 const embed = {
                     title: "New Song Request",
-                    color: 16711680,
+                    color: 16711680, // Red color
                     fields: [
-                        { name: "Song Title", value: title },
-                        { name: "Artist", value: artist },
-                        { name: "Requested by", value: userName },
-                        { name: "Message", value: userMessage || "No message provided" }
+                        {
+                            name: "Song Title",
+                            value: title
+                        },
+                        {
+                            name: "Artist",
+                            value: artist
+                        },
+                        {
+                            name: "Requested by",
+                            value: userName
+                        },
+                        {
+                            name: "Message",
+                            value: userMessage || "No message provided"
+                        }
                     ],
-                    footer: { text: "Paradox Radio" }
+                    footer: {
+                        text: "Paradox Radio"
+                    }
                 };
 
+                // Send the request to Discord webhook
                 fetch(webhookURL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ embeds: [embed] })
-                }).then(response => {
+                })
+                .then(response => {
                     if (response.ok) {
                         alert("Your song request has been sent!");
                         document.getElementById("popupOverlay").style.display = "none";
                     } else {
-                        alert("Error sending your request.");
+                        alert("There was an error sending your request.");
                     }
-                }).catch(error => console.error("Error:", error));
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    alert("There was an error sending your request.");
+                });
             } else {
                 alert("Please fill in all required fields.");
             }
         });
     </script>
+
 </body>
 
 </html>
