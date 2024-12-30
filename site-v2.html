@@ -174,108 +174,123 @@
 
     <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
 
-    <script>
-        // Webhook URL (Replace with your actual webhook URL)
-        const webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
+<script>
+    // Webhook URL (Replace with your actual webhook URL)
+    const webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
 
-        // Toggle radio play/pause
-        function toggleRadio() {
-            const stream = document.getElementById('stream');
-            const button = document.getElementById('radioButton');
+    // Toggle radio play/pause
+    function toggleRadio() {
+        const stream = document.getElementById('stream');
+        const button = document.getElementById('radioButton');
 
-            if (stream.paused) {
-                stream.play().then(() => {
-                    button.classList.remove('fa-play');
-                    button.classList.add('fa-pause');
-                }).catch(error => {
-                    console.error('Error playing audio:', error);
-                    alert('Unable to play the stream.');
-                });
-            } else {
-                stream.pause();
-                button.classList.remove('fa-pause');
-                button.classList.add('fa-play');
-            }
+        if (stream.paused) {
+            stream.play().then(() => {
+                button.classList.remove('fa-play');
+                button.classList.add('fa-pause');
+            }).catch(error => {
+                console.error('Error playing audio:', error);
+                alert('Unable to play the stream.');
+            });
+        } else {
+            stream.pause();
+            button.classList.remove('fa-pause');
+            button.classList.add('fa-play');
         }
+    }
 
-        // Open request popup when the "Request Song" button is clicked
-        document.getElementById("openRequestButton").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "flex";
-        });
+    // Open request popup when the "Request Song" button is clicked
+    document.getElementById("openRequestButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "flex";
+    });
 
-        // Close the popup when the "Close" button is clicked
-        document.getElementById("closePopupButton").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "none";
-        });
+    // Close the popup when the "Close" button is clicked
+    document.getElementById("closePopupButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "none";
+    });
 
-        // Handle the send request button click
-        document.getElementById("sendRequestButton").addEventListener("click", function () {
-            const title = document.getElementById("songTitle").value;
-            const artist = document.getElementById("songArtist").value;
-            const userName = document.getElementById("userName").value;
-            const userMessage = document.getElementById("userMessage").value;
+    // Handle the send request button click
+    document.getElementById("sendRequestButton").addEventListener("click", function () {
+        const title = document.getElementById("songTitle").value;
+        const artist = document.getElementById("songArtist").value;
+        const userName = document.getElementById("userName").value;
+        const userMessage = document.getElementById("userMessage").value;
 
-            if (title && artist && userName) {
-                // Create the embed for Discord
-                const embed = {
-                    title: "New Song Request",
-                    color: 16711680, // Red color
-                    fields: [
-                        {
-                            name: "Song Title",
-                            value: title
-                        },
-                        {
-                            name: "Artist",
-                            value: artist
-                        },
-                        {
-                            name: "Requested by",
-                            value: userName
-                        },
-                        {
-                            name: "Message",
-                            value: userMessage || "No message provided"
-                        }
-                    ],
-                    footer: {
-                        text: "Paradox Radio - Powered by tm6"
-                    }
-                };
-
-                // Send the request to Discord webhook
-                fetch(webhookURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
+        if (title && artist && userName) {
+            // Create the embed for Discord
+            const embed = {
+                title: "New Song Request",
+                color: 16711680, // Red color
+                fields: [
+                    {
+                        name: "Song Title",
+                        value: title
                     },
-                    body: JSON.stringify({ embeds: [embed] })
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert("Your song request has been sent!");
-                        document.getElementById("popupOverlay").style.display = "none";
-                    } else {
-                        alert("There was an error sending your request.");
+                    {
+                        name: "Artist",
+                        value: artist
+                    },
+                    {
+                        name: "Requested by",
+                        value: userName
+                    },
+                    {
+                        name: "Message",
+                        value: userMessage || "No message provided"
                     }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
+                ],
+                footer: {
+                    text: "Paradox Radio - Powered by tm6"
+                }
+            };
+
+            // Send the request to Discord webhook
+            fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ embeds: [embed] })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Your song request has been sent!");
+                    document.getElementById("popupOverlay").style.display = "none";
+                } else {
                     alert("There was an error sending your request.");
-                });
-            } else {
-                alert("Please fill in all required fields.");
-            }
-        });
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("There was an error sending your request.");
+            });
+        } else {
+            alert("Please fill in all required fields.");
+        }
+    });
 
-        // Fetch Now Playing data
-        const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
-        eventSource.onmessage = function(event) {
-            const nowPlayingData = JSON.parse(event.data);
-            document.getElementById("now-playing").innerText = `Now Playing: ${nowPlayingData.songTitle} by ${nowPlayingData.artist}`;
-        };
+    // Fetch Now Playing data
+    const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
 
-    </script>
+    // This event listens for incoming messages
+    eventSource.onmessage = function(event) {
+        // Parse the incoming JSON data
+        const nowPlayingData = JSON.parse(event.data);
+
+        // Check if the streamTitle exists and update the UI
+        if (nowPlayingData.streamTitle) {
+            document.getElementById("now-playing").innerText = `Now Playing: ${nowPlayingData.streamTitle}`;
+        } else {
+            document.getElementById("now-playing").innerText = 'Now Playing: No song data available';
+        }
+    };
+
+    // Optionally, handle ping messages (can be ignored for now)
+    eventSource.addEventListener('ping', function(event) {
+        // Handle the ping event if necessary (e.g., for keeping the connection alive)
+        console.log('Ping received');
+    });
+</script>
+
 
 </body>
 
