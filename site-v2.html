@@ -16,6 +16,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Paradox Radio</title>
     <style>
+        /* Force dark mode */
         body {
             background-color: #1a202c;
             color: white;
@@ -39,10 +40,15 @@
             background-color: #2d3748 !important;
         }
 
+        #now-playing-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
         #now-playing {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            margin-top: 15px;
+            color: #ff5733;
         }
 
         #requestPopup {
@@ -67,16 +73,6 @@
             z-index: 9999;
         }
 
-        #songTitle, #songArtist, #userName, #userMessage {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #555;
-            background-color: #444;
-            color: white;
-        }
-
         #sendRequestButton, #closePopupButton {
             background: #ff5733;
             color: white;
@@ -98,6 +94,7 @@
 </head>
 
 <body>
+
     <div id="notification" class="notification scale-0">
         <div>
             <span id="notificationText"></span>
@@ -111,40 +108,31 @@
                     <div class="grid gap-1 grid-cols-2 grid-rows-1">
                         <div>
                             <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg"
-                                class="h-32 w-32 rounded shadow float-right" onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
+                                class="h-32 w-32 rounded shadow float-right"
+                                onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
                         </div>
                         <div>
                             <img id="presenterAvatar" src="Screenshot_2024-12-25_121634.webp"
-                                class="h-32 w-32 rounded" onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
+                                class="h-32 w-32 rounded"
+                                onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="mt-2 text-center">
+        <div id="now-playing-container">
+            <h3>Now Playing:</h3>
             <div id="now-playing">Loading...</div>
         </div>
 
         <div class="mt-2 text-center">
-            <p>
-                <span class="font-bold"><a href="https://discord.gg/anKpgvGWMX">Discord</a></span>
-            </p>
-            <p>
-                <span class="font-bold"><a href="https://twitter.com/tm6_gg">Created with ❤️ by tm6</a></span>
-            </p>
-            <p>
-                <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
-            </p>
-            <p>
-                <span class="font-bold"><a href="https://paradox-radio.me">Status: </span><span id="presenter">Good </span>
-            </p>
-            <p>
-                <span class="font-bold">Version: </span><span id="presenter">1.6 - Critical Fixes, <b>Added new request system</b>! try it!</span>
-            </p>
-            <p>
-                <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton" style="color: #ff5733; font-size: 20px;">Request Song</a></span>
-            </p>
+            <p><span class="font-bold"><a href="https://discord.gg/anKpgvGWMX">Discord</a></span></p>
+            <p><span class="font-bold"><a href="https://twitter.com/tm6_gg">Created with ❤️ by tm6</a></span></p>
+            <p><span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span></p>
+            <p><span class="font-bold">Status: </span><span id="presenter">Good</span></p>
+            <p><span class="font-bold">Version: </span><span id="presenter">1.6 - Critical Fixes, <b>Added new request system</b>! try it!</span></p>
+            <p><span class="font-bold"><a href="javascript:void(0)" id="openRequestButton" style="color: #ff5733; font-size: 20px;">Request Song</a></span></p>
         </div>
 
         <div class="text-center m-auto mt-1">
@@ -156,60 +144,64 @@
         </div>
     </div>
 
-    <div id="popupOverlay">
-        <div id="requestPopup">
-            <h2>Request a Song</h2>
-            <input type="text" id="songTitle" placeholder="Enter song title" />
-            <input type="text" id="songArtist" placeholder="Enter artist name" />
-            <input type="text" id="userName" placeholder="Enter your name" />
-            <textarea id="userMessage" placeholder="Message (optional)" rows="3"></textarea>
-            <button id="sendRequestButton">Send Request</button>
-            <button id="closePopupButton">Close</button>
-        </div>
-    </div>
-
     <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
 
     <script>
-        // Radio control
-        function toggleRadio() {
-            const stream = document.getElementById('stream');
-            const button = document.getElementById('radioButton');
-            if (stream.paused) {
-                stream.play().then(() => {
-                    button.classList.replace('fa-play', 'fa-pause');
-                }).catch(err => alert('Stream playback error!'));
-            } else {
-                stream.pause();
-                button.classList.replace('fa-pause', 'fa-play');
-            }
-        }
+        const streamUrl = "https://stream.zeno.fm/jw92zlb8aobvv";
+        const proxyUrl = "https://cors-anywhere.herokuapp.com/";
 
-        // Fetch "Now Playing" Metadata
         async function fetchNowPlaying() {
-            const streamUrl = "https://stream.zeno.fm/jw92zlb8aobvv";
             try {
-                const response = await fetch(streamUrl, { headers: { "Icy-MetaData": "1" } });
+                const response = await fetch(proxyUrl + streamUrl, {
+                    headers: { "Icy-MetaData": "1" },
+                });
+
                 const metaint = parseInt(response.headers.get("icy-metaint"), 10);
                 if (!metaint) {
                     document.getElementById("now-playing").innerText = "No metadata available.";
                     return;
                 }
+
                 const reader = response.body.getReader();
                 let bytesRead = 0;
+                let metadata = "";
+
                 while (true) {
                     const { done, value } = await reader.read();
                     if (done) break;
                     bytesRead += value.length;
+
                     if (bytesRead >= metaint) {
-                        const metadata = new TextDecoder("utf-8").decode(value.slice(metaint));
-                        const match = metadata.match(/StreamTitle='([^;]*)';/);
-                        document.getElementById("now-playing").innerText = `Now Playing: ${match ? match[1] : "Unknown"}`;
+                        metadata = new TextDecoder("utf-8").decode(value.slice(metaint));
                         break;
                     }
                 }
+
+                const titleMatch = metadata.match(/StreamTitle='([^;]*)';/);
+                const nowPlaying = titleMatch ? titleMatch[1] : "Unknown Title";
+                document.getElementById("now-playing").innerText = nowPlaying;
             } catch (error) {
+                console.error("Error fetching metadata:", error);
                 document.getElementById("now-playing").innerText = "Error loading metadata.";
+            }
+        }
+
+        function toggleRadio() {
+            const stream = document.getElementById('stream');
+            const button = document.getElementById('radioButton');
+
+            if (stream.paused) {
+                stream.play().then(() => {
+                    button.classList.remove('fa-play');
+                    button.classList.add('fa-pause');
+                }).catch(error => {
+                    console.error('Error playing audio:', error);
+                    alert('Unable to play the stream.');
+                });
+            } else {
+                stream.pause();
+                button.classList.remove('fa-pause');
+                button.classList.add('fa-play');
             }
         }
 
