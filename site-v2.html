@@ -147,17 +147,17 @@
     <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
 
     <script>
-        const streamUrl = "https://stream.zeno.fm/jw92zlb8aobvv";
-        const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+        const streamUrl = "https://stream.zeno.fm/jw92zlb8aobvv";  // Direct stream URL
 
         async function fetchNowPlaying() {
             try {
-                const response = await fetch(proxyUrl + streamUrl, {
+                const response = await fetch(streamUrl, {
                     headers: { "Icy-MetaData": "1" },
                 });
 
                 const metaint = parseInt(response.headers.get("icy-metaint"), 10);
                 if (!metaint) {
+                    console.error("No metadata interval provided");
                     document.getElementById("now-playing").innerText = "No metadata available.";
                     return;
                 }
@@ -176,6 +176,8 @@
                         break;
                     }
                 }
+
+                console.log("Metadata fetched:", metadata); // Log the metadata for debugging
 
                 const titleMatch = metadata.match(/StreamTitle='([^;]*)';/);
                 const nowPlaying = titleMatch ? titleMatch[1] : "Unknown Title";
