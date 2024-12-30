@@ -23,19 +23,12 @@
             </div>
         </div>
 
-        <!-- Now Playing section under images -->
+        <!-- Now Playing section moved below the images -->
         <div class="mt-4 text-center">
             <p class="text-xl font-semibold" id="nowPlaying">Now Playing: <span id="streamTitle">Loading...</span></p>
         </div>
 
-        <!-- Move Play button below Now Playing -->
-        <div class="text-center m-auto mt-4">
-            <p class="text-4xl hover:scale-105 transition-all">
-                <button id="radioButton" class="fa-solid fa-play" onclick="toggleRadio()"></button>
-            </p>
-        </div>
-
-        <!-- Request Song button below -->
+        <!-- Request Song button -->
         <div class="mt-2 text-center">
             <p>
                 <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton" style="color: #ff5733; font-size: 20px;">Request Song</a></span>
@@ -93,26 +86,6 @@
                 updateStreamTitle(data.streamTitle);
             }
         };
-
-        // Toggle radio play/pause
-        function toggleRadio() {
-            const stream = document.getElementById('stream');
-            const button = document.getElementById('radioButton');
-
-            if (stream.paused) {
-                stream.play().then(() => {
-                    button.classList.remove('fa-play');
-                    button.classList.add('fa-pause');
-                }).catch(error => {
-                    console.error('Error playing audio:', error);
-                    alert('Unable to play the stream.');
-                });
-            } else {
-                stream.pause();
-                button.classList.remove('fa-pause');
-                button.classList.add('fa-play');
-            }
-        }
 
         // Open request popup when the "Request Song" button is clicked
         document.getElementById("openRequestButton").addEventListener("click", function () {
