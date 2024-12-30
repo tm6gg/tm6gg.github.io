@@ -1,166 +1,275 @@
-<body>
-    <div id="notification" class="notification scale-0">
-        <div>
-            <span id="notificationText"></span>
-        </div>
-    </div>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
+            crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="PR-logo-design-Graphics-31862184-1 (1).jpg">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Paradox Radio">
+    <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
+    <meta name="author" content="RadioEurope">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="splash-main/src/assets/css/style.css"/>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Paradox Radio</title>
+    <style>
+        /* General styling */
+        body {
+            background-color: #1a202c;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
 
-    <div id="content" class="flex flex-col h-screen transition-all">
-        <div class="text-center m-auto mb-0">
-            <div>
-                <div class="dark:bg-slate-800 bg-slate-200 p-1 rounded w-[264px]">
-                    <div class="grid gap-1 grid-cols-2 grid-rows-1">
-                        <div>
-                            <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg"
-                                class="h-32 w-32 rounded shadow float-right" onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
-                        </div>
-                        <div>
-                            <img id="presenterAvatar" src="Screenshot_2024-12-25_121634.webp"
-                                class="h-32 w-32 rounded" onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
-                        </div>
-                    </div>
+        .bg-slate-50 {
+            background-color: #1a202c !important;
+        }
+
+        .dark\:bg-slate-900 {
+            background-color: #2d3748 !important;
+        }
+
+        .text-black, .dark\:text-white {
+            color: white !important;
+        }
+
+        .bg-slate-200 {
+            background-color: #2d3748 !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Image styling */
+        .img-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .img-container img {
+            height: 128px;
+            width: 128px;
+            border-radius: 50%;
+            margin: 0 15px;
+        }
+
+        /* Now playing text */
+        #nowPlaying {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Button styling */
+        #openRequestButton {
+            font-size: 20px;
+            color: #ff5733;
+            cursor: pointer;
+        }
+
+        /* Popup styling */
+        #popupOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #requestPopup {
+            background: #333;
+            color: white;
+            border-radius: 8px;
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+        }
+
+        /* Form input styling */
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #444;
+            color: white;
+        }
+
+        button {
+            background: #ff5733;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* Player button */
+        .fa-play, .fa-pause {
+            font-size: 2em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div id="notification" class="notification scale-0">
+    <div>
+        <span id="notificationText"></span>
+    </div>
+</div>
+
+<div id="content" class="flex flex-col h-screen transition-all">
+    <div class="text-center m-auto mb-0">
+        <div class="dark:bg-slate-800 bg-slate-200 p-1 rounded w-[264px]">
+            <div class="grid gap-1 grid-cols-2 grid-rows-1">
+                <div>
+                    <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg"
+                         class="h-32 w-32 rounded shadow float-right" onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
+                </div>
+                <div>
+                    <img id="presenterAvatar" src="Screenshot_2024-12-25_121634.webp"
+                         class="h-32 w-32 rounded" onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
                 </div>
             </div>
         </div>
-
-        <!-- Now Playing section moved below the images -->
-        <div class="mt-4 text-center">
-            <p class="text-xl font-semibold" id="nowPlaying">Now Playing: <span id="streamTitle">Loading...</span></p>
-        </div>
-
-        <!-- Request Song button -->
-        <div class="mt-2 text-center">
-            <p>
-                <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton" style="color: #ff5733; font-size: 20px;">Request Song</a></span>
-            </p>
-        </div>
-
-        <div class="mt-2 text-center">
-            <p>
-                <span class="font-bold"><a href="https://discord.gg/anKpgvGWMX">Discord</a></span>
-            </p>
-            <p>
-                <span class="font-bold"><a href="https://twitter.com/tm6_gg">Created with ❤️ by tm6</a></span>
-            </p>
-            <p>
-                <span class="font-bold"><a href="https://paradox-radio.me">Discord Bot (soon)</a></span>
-            </p>
-            <p>
-                <span class="font-bold"><a href="https://paradox-radio.me">Status: </span><span id="presenter">Good </span>
-            </p>
-            <p>
-                <span class="font-bold">Version: </span><span id="presenter">1.6 - Critical Fixes, <b>Added new request system</b>! try it!</span>
-            </p>
-        </div>
     </div>
 
-    <!-- Request Popup -->
-    <div id="popupOverlay">
-        <div id="requestPopup">
-            <h2>Request a Song</h2>
-            <input type="text" id="songTitle" placeholder="Enter song title" />
-            <input type="text" id="songArtist" placeholder="Enter artist name" />
-            <input type="text" id="userName" placeholder="Enter your name" />
-            <textarea id="userMessage" placeholder="Message (optional)" rows="3"></textarea>
-            <button id="sendRequestButton">Send Request</button>
-            <button id="closePopupButton">Close</button>
-        </div>
+    <!-- Now Playing Section -->
+    <div class="text-center mt-4" id="nowPlaying">
+        Now Playing: <span id="streamTitle">Loading...</span>
     </div>
 
-    <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
+    <!-- Request Song button -->
+    <div class="mt-2 text-center">
+        <p>
+            <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton">Request Song</a></span>
+        </p>
+    </div>
 
-    <script>
-        // Webhook URL (Replace with your actual webhook URL)
-        const webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
+    <!-- Play/Pause Button -->
+    <div class="text-center m-auto mt-4">
+        <p>
+            <button id="radioButton" class="fa-solid fa-play" onclick="toggleRadio()"></button>
+        </p>
+    </div>
+</div>
 
-        // Function to update the stream title dynamically
-        function updateStreamTitle(title) {
-            document.getElementById('streamTitle').innerText = title || 'No song playing';
+<!-- Request Popup -->
+<div id="popupOverlay">
+    <div id="requestPopup">
+        <h2>Request a Song</h2>
+        <input type="text" id="songTitle" placeholder="Enter song title"/>
+        <input type="text" id="songArtist" placeholder="Enter artist name"/>
+        <input type="text" id="userName" placeholder="Enter your name"/>
+        <textarea id="userMessage" placeholder="Message (optional)" rows="3"></textarea>
+        <button id="sendRequestButton">Send Request</button>
+        <button id="closePopupButton">Close</button>
+    </div>
+</div>
+
+<audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
+
+<script>
+    // EventSource for metadata stream
+    const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
+
+    // Function to update stream title
+    function updateStreamTitle(title) {
+        document.getElementById('streamTitle').innerText = title || 'No song playing';
+    }
+
+    // Listen for metadata updates
+    eventSource.onmessage = function (event) {
+        const data = JSON.parse(event.data);
+        if (data && data.streamTitle) {
+            updateStreamTitle(data.streamTitle);
         }
+    };
 
-        // Fetch and handle incoming API data for the song title
-        const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
-        eventSource.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            if (data && data.streamTitle) {
-                updateStreamTitle(data.streamTitle);
-            } else {
-                console.error('Invalid data:', event.data);
-            }
-        };
+    eventSource.onerror = function () {
+        console.error('Error with EventSource');
+    };
 
-        eventSource.onerror = function (error) {
-            console.error('EventSource failed:', error);
-        };
+    // Toggle radio play/pause
+    function toggleRadio() {
+        const stream = document.getElementById('stream');
+        const button = document.getElementById('radioButton');
 
-        // Open request popup when the "Request Song" button is clicked
-        document.getElementById("openRequestButton").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "flex";
-        });
+        if (stream.paused) {
+            stream.play().then(() => {
+                button.classList.remove('fa-play');
+                button.classList.add('fa-pause');
+            }).catch(error => {
+                console.error('Error playing audio:', error);
+            });
+        } else {
+            stream.pause();
+            button.classList.remove('fa-pause');
+            button.classList.add('fa-play');
+        }
+    }
 
-        // Close the popup when the "Close" button is clicked
-        document.getElementById("closePopupButton").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "none";
-        });
+    // Open request popup
+    document.getElementById("openRequestButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "flex";
+    });
 
-        // Handle the send request button click
-        document.getElementById("sendRequestButton").addEventListener("click", function () {
-            const title = document.getElementById("songTitle").value;
-            const artist = document.getElementById("songArtist").value;
-            const userName = document.getElementById("userName").value;
-            const userMessage = document.getElementById("userMessage").value;
+    // Close request popup
+    document.getElementById("closePopupButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "none";
+    });
 
-            if (title && artist && userName) {
-                // Create the embed for Discord
-                const embed = {
-                    title: "New Song Request",
-                    color: 16711680, // Red color
-                    fields: [
-                        {
-                            name: "Song Title",
-                            value: title
-                        },
-                        {
-                            name: "Artist",
-                            value: artist
-                        },
-                        {
-                            name: "Requested by",
-                            value: userName
-                        },
-                        {
-                            name: "Message",
-                            value: userMessage || "No message provided"
-                        }
-                    ],
-                    footer: {
-                        text: "Paradox Radio - Powered by tm6"
-                    }
-                };
+    // Handle song request
+    document.getElementById("sendRequestButton").addEventListener("click", function () {
+        const title = document.getElementById("songTitle").value;
+        const artist = document.getElementById("songArtist").value;
+        const userName = document.getElementById("userName").value;
+        const userMessage = document.getElementById("userMessage").value;
 
-                // Send the request to Discord webhook
-                fetch(webhookURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ embeds: [embed] })
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert("Your song request has been sent!");
-                        document.getElementById("popupOverlay").style.display = "none";
-                    } else {
-                        alert("There was an error sending your request.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    alert("There was an error sending your request.");
-                });
-            } else {
-                alert("Please fill in all required fields.");
-            }
-        });
-    </script>
+        if (title && artist && userName) {
+            const embed = {
+                title: "New Song Request",
+                color: 16711680, // Red
+                fields: [
+                    { name: "Song Title", value: title },
+                    { name: "Artist", value: artist },
+                    { name: "Requested by", value: userName },
+                    { name: "Message", value: userMessage || "No message provided" }
+                ],
+                footer: { text: "Paradox Radio - Powered by tm6" }
+            };
+
+            fetch('https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ embeds: [embed] })
+            }).then(response => {
+                if (response.ok) {
+                    alert("Your song request has been sent!");
+                    document.getElementById("popupOverlay").style.display = "none";
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("There was an error sending your request.");
+            });
+        } else {
+            alert("Please fill in all required fields.");
+        }
+    });
+</script>
 </body>
+</html>
