@@ -118,6 +118,7 @@
 
         /*SR*/
        /* Centering and Styling of Song Request Form */
+/* Request Song Button */
 #openRequestButton {
     background-color: #FF5733;
     color: white;
@@ -127,13 +128,64 @@
     text-decoration: none;
     cursor: pointer;
     display: inline-block;
+    border: 2px solid #FF5733; /* Keeps the box look */
+    margin-top: 20px; /* Adds spacing between button and player */
     transition: background-color 0.3s ease;
-    border: 2px solid #FF5733; /* Adds a border to make it look like a box */
 }
 
+/* Hover effect for the button */
 #openRequestButton:hover {
     background-color: #D44F29;
-    border-color: #D44F29; /* Change the border color on hover */
+    border-color: #D44F29;
+}
+
+/* Request Song Modal Box */
+.request-section {
+    margin-top: 40px;
+    text-align: center;
+    background-color: #2D2D2D;
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.request-section input,
+.request-section textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #444;
+    color: white;
+}
+
+.request-section button {
+    background-color: #FF5733;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    border: none;
+    font-size: 1.1rem;
+}
+
+.request-section button:hover {
+    background-color: #D44F29;
+}
+
+.request-section a {
+    font-size: 1.2rem;
+    color: #FF5733;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.request-section a:hover {
+    text-decoration: underline;
 }
 
 
