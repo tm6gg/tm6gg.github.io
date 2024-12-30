@@ -1,77 +1,147 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
-            crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon" href="PR-logo-design-Graphics-31862184-1 (1).jpg">
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Paradox Radio">
-    <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
+    <meta name="keywords" content="radio, web radio, online radio, music, songs, stream">
     <meta name="author" content="RadioEurope">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="splash-main/src/assets/css/style.css"/>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Paradox Radio</title>
+
+    <!-- Google Fonts for Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="PR-logo-design-Graphics-31862184-1 (1).jpg">
+
+    <!-- External Stylesheet (if needed) -->
+    <link rel="stylesheet" href="style.css">
+    
     <style>
-        /* General styling */
+        /* Global Styling */
         body {
-            background-color: #1a202c;
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
             color: white;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, p {
             margin: 0;
             padding: 0;
         }
 
-        .bg-slate-50 {
-            background-color: #1a202c !important;
+        /* Main container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+            background-color: #121212;
         }
 
-        .dark\:bg-slate-900 {
-            background-color: #2d3748 !important;
-        }
-
-        .text-black, .dark\:text-white {
-            color: white !important;
-        }
-
-        .bg-slate-200 {
-            background-color: #2d3748 !important;
-        }
-
-        .text-center {
+        /* Header */
+        .header {
             text-align: center;
+            margin-bottom: 40px;
         }
 
-        /* Image styling */
-        .img-container {
+        .header h1 {
+            font-size: 3rem;
+            color: #FF5733;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #bbb;
+        }
+
+        /* Radio Player Section */
+        .player-container {
+            background-color: #2D2D2D;
+            border-radius: 15px;
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6);
+        }
+
+        .player-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .now-playing {
+            font-size: 1.2rem;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        .player-controls {
             display: flex;
             justify-content: center;
-            margin: 20px 0;
+            align-items: center;
+            gap: 20px;
         }
 
-        .img-container img {
-            height: 128px;
-            width: 128px;
+        .player-controls button {
+            background-color: #FF5733;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.5rem;
+            color: white;
             border-radius: 50%;
-            margin: 0 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        /* Now playing text */
-        #nowPlaying {
-            margin-top: 20px;
-            font-size: 1.2em;
-            font-weight: bold;
+        .player-controls button:hover {
+            background-color: #D44F29;
         }
 
-        /* Button styling */
-        #openRequestButton {
-            font-size: 20px;
-            color: #ff5733;
+        .player-controls .fa-play {
+            font-size: 2.5rem;
+        }
+
+        .player-controls .fa-pause {
+            font-size: 2.5rem;
+        }
+
+        /* Song Request Section */
+        .request-section {
+            margin-top: 40px;
+            text-align: center;
+            background-color: #2D2D2D;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .request-section a {
+            font-size: 1.2rem;
+            color: #FF5733;
+            text-decoration: none;
             cursor: pointer;
         }
 
-        /* Popup styling */
+        .request-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Song Request Form Popup */
         #popupOverlay {
             position: fixed;
             top: 0;
@@ -85,97 +155,89 @@
         }
 
         #requestPopup {
-            background: #333;
+            background-color: #333;
             color: white;
-            border-radius: 8px;
-            padding: 20px;
-            width: 300px;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
             text-align: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Form input styling */
-        input, textarea {
+        #requestPopup input,
+        #requestPopup textarea {
             width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
             border: 1px solid #555;
             background-color: #444;
             color: white;
         }
 
-        button {
-            background: #ff5733;
-            color: white;
+        #requestPopup button {
+            background-color: #FF5733;
             padding: 10px 20px;
+            font-size: 1rem;
+            color: white;
             border-radius: 5px;
+            cursor: pointer;
             border: none;
-            cursor: pointer;
         }
 
-        button:hover {
-            opacity: 0.8;
+        #requestPopup button:hover {
+            background-color: #D44F29;
         }
 
-        /* Player button */
-        .fa-play, .fa-pause {
-            font-size: 2em;
-            cursor: pointer;
+        /* Footer */
+        footer {
+            text-align: center;
+            color: #bbb;
+            margin-top: 50px;
+            font-size: 0.9rem;
         }
+
     </style>
 </head>
 <body>
 
-<div id="notification" class="notification scale-0">
-    <div>
-        <span id="notificationText"></span>
-    </div>
-</div>
+<div class="container">
 
-<div id="content" class="flex flex-col h-screen transition-all">
-    <div class="text-center m-auto mb-0">
-        <div class="dark:bg-slate-800 bg-slate-200 p-1 rounded w-[264px]">
-            <div class="grid gap-1 grid-cols-2 grid-rows-1">
-                <div>
-                    <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg"
-                         class="h-32 w-32 rounded shadow float-right" onerror="this.src='https://cdn.temperrrr.uk/r/LogisticHaul_ATS_TMP.png'" />
-                </div>
-                <div>
-                    <img id="presenterAvatar" src="Screenshot_2024-12-25_121634.webp"
-                         class="h-32 w-32 rounded" onerror="this.src='https://f.tem6.org.uk/r/Temperrrr.png'" />
-                </div>
-            </div>
+    <!-- Header -->
+    <div class="header">
+        <h1>Paradox Radio</h1>
+        <p>Streaming the best music live</p>
+    </div>
+
+    <!-- Radio Player Section -->
+    <div class="player-container">
+        <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg" alt="Radio Cover Image" />
+        <div class="now-playing">
+            Now Playing: <span id="streamTitle">Loading...</span>
+        </div>
+
+        <!-- Play / Pause Controls -->
+        <div class="player-controls">
+            <button id="playPauseButton" class="fa fa-play" onclick="toggleRadio()"></button>
         </div>
     </div>
 
-    <!-- Now Playing Section -->
-    <div class="text-center mt-4" id="nowPlaying">
-        Now Playing: <span id="streamTitle">Loading...</span>
+    <!-- Song Request Section -->
+    <div class="request-section">
+        <a href="javascript:void(0)" id="openRequestButton">Request a Song</a>
     </div>
 
-    <!-- Request Song button -->
-    <div class="mt-2 text-center">
-        <p>
-            <span class="font-bold"><a href="javascript:void(0)" id="openRequestButton">Request Song</a></span>
-        </p>
-    </div>
-
-    <!-- Play/Pause Button -->
-    <div class="text-center m-auto mt-4">
-        <p>
-            <button id="radioButton" class="fa-solid fa-play" onclick="toggleRadio()"></button>
-        </p>
-    </div>
 </div>
 
-<!-- Request Popup -->
+<!-- Song Request Popup -->
 <div id="popupOverlay">
     <div id="requestPopup">
         <h2>Request a Song</h2>
-        <input type="text" id="songTitle" placeholder="Enter song title"/>
-        <input type="text" id="songArtist" placeholder="Enter artist name"/>
-        <input type="text" id="userName" placeholder="Enter your name"/>
-        <textarea id="userMessage" placeholder="Message (optional)" rows="3"></textarea>
+        <input type="text" id="songTitle" placeholder="Song Title" required />
+        <input type="text" id="songArtist" placeholder="Artist Name" required />
+        <input type="text" id="userName" placeholder="Your Name" required />
+        <textarea id="userMessage" placeholder="Message (Optional)" rows="3"></textarea>
         <button id="sendRequestButton">Send Request</button>
         <button id="closePopupButton">Close</button>
     </div>
@@ -184,15 +246,12 @@
 <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
 
 <script>
-    // EventSource for metadata stream
     const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
 
-    // Function to update stream title
     function updateStreamTitle(title) {
         document.getElementById('streamTitle').innerText = title || 'No song playing';
     }
 
-    // Listen for metadata updates
     eventSource.onmessage = function (event) {
         const data = JSON.parse(event.data);
         if (data && data.streamTitle) {
@@ -204,10 +263,9 @@
         console.error('Error with EventSource');
     };
 
-    // Toggle radio play/pause
     function toggleRadio() {
         const stream = document.getElementById('stream');
-        const button = document.getElementById('radioButton');
+        const button = document.getElementById('playPauseButton');
 
         if (stream.paused) {
             stream.play().then(() => {
@@ -223,17 +281,14 @@
         }
     }
 
-    // Open request popup
     document.getElementById("openRequestButton").addEventListener("click", function () {
         document.getElementById("popupOverlay").style.display = "flex";
     });
 
-    // Close request popup
     document.getElementById("closePopupButton").addEventListener("click", function () {
         document.getElementById("popupOverlay").style.display = "none";
     });
 
-    // Handle song request
     document.getElementById("sendRequestButton").addEventListener("click", function () {
         const title = document.getElementById("songTitle").value;
         const artist = document.getElementById("songArtist").value;
@@ -243,7 +298,7 @@
         if (title && artist && userName) {
             const embed = {
                 title: "New Song Request",
-                color: 16711680, // Red
+                color: 16711680,
                 fields: [
                     { name: "Song Title", value: title },
                     { name: "Artist", value: artist },
@@ -271,5 +326,10 @@
         }
     });
 </script>
+
+<footer>
+    <p>&copy; 2024 Paradox Radio. All Rights Reserved.</p>
+</footer>
+
 </body>
 </html>
