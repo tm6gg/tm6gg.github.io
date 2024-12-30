@@ -141,6 +141,22 @@
             text-decoration: underline;
         }
 
+        .discord-link {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #7289da;
+        }
+
+        .discord-link a {
+            color: #7289da;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .discord-link a:hover {
+            text-decoration: underline;
+        }
+
         /* Song Request Form Popup */
         #popupOverlay {
             position: fixed;
@@ -198,6 +214,20 @@
             font-size: 0.9rem;
         }
 
+        /* Notification Styling */
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            font-size: 1.1rem;
+        }
+
     </style>
 </head>
 <body>
@@ -228,6 +258,11 @@
         <a href="javascript:void(0)" id="openRequestButton">Request a Song</a>
     </div>
 
+    <!-- Discord Link -->
+    <div class="discord-link">
+        <p>Join our community on Discord! <a href="https://discord.gg/yourlink" target="_blank">Click here</a></p>
+    </div>
+
 </div>
 
 <!-- Song Request Popup -->
@@ -244,6 +279,9 @@
 </div>
 
 <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
+
+<!-- Notification Box -->
+<div id="notification">Your song request has been sent!</div>
 
 <script>
     const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
@@ -314,7 +352,8 @@
                 body: JSON.stringify({ embeds: [embed] })
             }).then(response => {
                 if (response.ok) {
-                    alert("Your song request has been sent!");
+                    // Show notification
+                    showNotification();
                     document.getElementById("popupOverlay").style.display = "none";
                 }
             }).catch(error => {
@@ -325,6 +364,15 @@
             alert("Please fill in all required fields.");
         }
     });
+
+    // Show notification on the site
+    function showNotification() {
+        const notification = document.getElementById('notification');
+        notification.style.display = 'block';
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 3000);  // Hide after 3 seconds
+    }
 </script>
 
 <footer>
