@@ -44,7 +44,7 @@
 
         <div class="centered">
             <p>
-                <button id="radioButton" class="fa-solid fa-play" onclick="toggleRadio()">Play</button>
+                <button id="radioButton" onclick="toggleRadio()">Play</button>
             </p>
         </div>
     </div>
@@ -53,6 +53,8 @@
 
     <script>
         const streamUrl = "https://stream.zeno.fm/jw92zlb8aobvv"; // Your stream URL
+        const stream = document.getElementById('stream');
+        const radioButton = document.getElementById('radioButton');
 
         // Function to fetch metadata from the stream
         async function fetchNowPlaying() {
@@ -77,8 +79,12 @@
                     bytesRead += value.length;
                     if (bytesRead >= metaint) {
                         const metadata = new TextDecoder("utf-8").decode(value.slice(metaint));
-                        const title = metadata.match(/StreamTitle='([^;]*)';/)[1];
-                        document.getElementById("now-playing").innerText = `Now Playing: ${title}`;
+                        const title = metadata.match(/StreamTitle='([^;]*)';/);
+                        if (title && title[1]) {
+                            document.getElementById("now-playing").innerText = `Now Playing: ${title[1]}`;
+                        } else {
+                            document.getElementById("now-playing").innerText = "No title available.";
+                        }
                         break;
                     }
                 }
@@ -96,19 +102,16 @@
 
         // Play/Pause functionality for the radio stream
         function toggleRadio() {
-            const stream = document.getElementById("stream");
-            const button = document.getElementById("radioButton");
-
             if (stream.paused) {
                 stream.play().then(() => {
-                    button.innerText = "Pause";
+                    radioButton.innerText = "Pause";
                 }).catch(error => {
                     console.error('Error playing audio:', error);
                     alert('Unable to play the stream.');
                 });
             } else {
                 stream.pause();
-                button.innerText = "Play";
+                radioButton.innerText = "Play";
             }
         }
     </script>
