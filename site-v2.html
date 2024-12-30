@@ -11,41 +11,64 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
 
         #now-playing {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: bold;
             color: #ff5733;
             text-align: center;
             margin-top: 20px;
+            transition: opacity 0.3s ease-in-out;
         }
 
         #radioButton {
-            font-size: 30px;
+            font-size: 20px;
             cursor: pointer;
             color: #ff5733;
+            padding: 10px 20px;
+            background-color: #333;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        #radioButton:hover {
+            background-color: #555;
         }
 
         .centered {
             text-align: center;
             margin-top: 30px;
         }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 87, 51, 0.5);
+        }
+
     </style>
 </head>
 <body>
-    <div id="content" class="flex flex-col h-screen">
+    <div id="content">
         <div class="centered">
+            <!-- Logo -->
             <img src="PR-logo-design-Graphics-31862184-1 (1).jpg" alt="Paradox Radio Logo" class="h-32 w-32 rounded shadow" />
         </div>
 
-        <!-- Display the current song title -->
+        <!-- Now Playing Title -->
         <div id="now-playing" class="centered">Loading...</div>
 
+        <!-- Play/Pause Button -->
         <div class="centered">
-            <p>
-                <button id="radioButton" onclick="toggleRadio()">Play</button>
-            </p>
+            <button id="radioButton" onclick="toggleRadio()">Play</button>
         </div>
     </div>
 
