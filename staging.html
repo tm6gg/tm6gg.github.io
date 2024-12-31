@@ -18,155 +18,155 @@
 
     <style>
       body {
-    font-family: 'Poppins', sans-serif;
-    background-color: #121212;
-    color: white;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-}
+        font-family: 'Poppins', sans-serif;
+        background-color: #121212;
+        color: white;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    min-height: 100vh;
-    text-align: center;
-    gap: 20px;
-}
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        flex: 1; /* Takes remaining space */
+        text-align: center;
+        gap: 20px;
+      }
 
-.player-container {
-    background-color: #2D2D2D;
-    border-radius: 15px;
-    padding: 30px;
-    width: 80%;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6);
-}
+      .player-container {
+        background-color: #2D2D2D;
+        border-radius: 15px;
+        padding: 30px;
+        width: 80%;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6);
+      }
 
-.player-container img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin-bottom: 20px;
-    object-fit: cover;
-}
+      .player-container img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        object-fit: cover;
+      }
 
-.now-playing {
-    font-size: 1.2rem;
-    color: #bbb;
-    margin-bottom: 20px;
-}
+      .now-playing {
+        font-size: 1.2rem;
+        color: #bbb;
+        margin-bottom: 20px;
+      }
 
-.player-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
+      .player-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      }
 
-.player-controls button {
-    font-size: 1.5rem;
-    background: #FF5733;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-}
+      .player-controls button {
+        font-size: 1.5rem;
+        background: #FF5733;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+      }
 
-.player-controls button:hover {
-    transform: scale(1.1);
-}
+      .player-controls button:hover {
+        transform: scale(1.1);
+      }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+      }
 
-.modal-box {
-    background: #2D2D2D;
-    color: white;
-    border-radius: 10px;
-    padding: 20px;
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
+      .modal-box {
+        background: #2D2D2D;
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
 
-textarea,
-input {
-    width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #555;
-    background-color: #444;
-    color: white;
-}
+      textarea,
+      input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #555;
+        background-color: #444;
+        color: white;
+      }
 
-.modal-button {
-    background: #0077b5;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    margin: 5px 0;
-}
+      .modal-button {
+        background: #0077b5;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        margin: 5px 0;
+      }
 
-.modal-button.close {
-    background: #e74c3c;
-}
+      .modal-button.close {
+        background: #e74c3c;
+      }
 
-.modal-button:hover {
-    opacity: 0.8;
-}
+      .modal-button:hover {
+        opacity: 0.8;
+      }
 
-footer {
-    text-align: center;
-    color: #bbb;
-    margin-top: 50px;
-    font-size: 0.9rem;
-}
+      footer {
+        text-align: center;
+        color: #bbb;
+        font-size: 0.9rem;
+        padding: 20px;
+        background-color: #1a1a1a;
+        width: 100%;
+        margin-top: auto; /* Ensures it stays at the bottom */
+      }
 
-#notification {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-    display: none;
-    font-size: 1.1rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-#error-message {
-    color: #e74c3c;
-    margin-top: 20px;
-    display: none;
-}
+      #notification {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        display: none;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      }
 
     </style>
 </head>
@@ -202,7 +202,6 @@ footer {
                 <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
                 <button id="sendRequestMessageButton" class="modal-button">Send</button>
                 <button id="closeRequestMessageButton" class="modal-button close">Close</button>
-                <div id="error-message"></div> <!-- Error message area -->
             </div>
         </div>
 
@@ -239,7 +238,7 @@ footer {
                     button.classList.remove('fa-play');
                     button.classList.add('fa-pause');
                 }).catch(error => {
-                    showError("Error playing the radio stream.");
+                    console.error('Error playing audio:', error);
                 });
             } else {
                 stream.pause();
@@ -254,19 +253,13 @@ footer {
 
         document.getElementById("closeRequestMessageButton").addEventListener("click", function () {
             document.getElementById("requestMessageOverlay").style.display = "none";
-            clearError();
         });
 
         document.getElementById("sendRequestMessageButton").addEventListener("click", function () {
-            const name = document.getElementById("userName").value;
+            const userName = document.getElementById("userName").value;
             const title = document.getElementById("songTitle").value;
             const artist = document.getElementById("songArtist").value;
             const userMessage = document.getElementById("userMessage").value;
-
-            if (!name || (!title && !artist && !userMessage)) {
-                showError("Please fill in your name and at least one other field.");
-                return;
-            }
 
             let webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc'; // Default webhook for requests
 
@@ -275,32 +268,35 @@ footer {
                 webhookURL = 'https://discord.com/api/webhooks/1323764116250300499/mR2bkLX8xawkiH8aeN-IfDdCmRZqIpi96vy5VSyAvHW_t1dzlvmoD70i3RUD5AR9EvIh';
             }
 
-            const embed = {
-                title: "New Request or Message",
-                color: 16711680,
-                fields: [
-                    { name: "Name", value: name },
-                    { name: "Song Title", value: title || "N/A" },
-                    { name: "Artist", value: artist || "N/A" },
-                    { name: "Message", value: userMessage || "No message provided" }
-                ],
-                footer: { text: "Paradox Radio - Powered by tm6" }
-            };
+            if (title || artist || userMessage || userName) {
+                const embed = {
+                    title: "New Request or Message",
+                    color: 16711680,
+                    fields: [
+                        { name: "Name", value: userName || "Anonymous" },
+                        { name: "Song Title", value: title || "N/A" },
+                        { name: "Artist", value: artist || "N/A" },
+                        { name: "Message", value: userMessage || "No message provided" }
+                    ],
+                    footer: { text: "Paradox Radio - Powered by tm6" }
+                };
 
-            fetch(webhookURL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ embeds: [embed] })
-            }).then(response => {
-                if (response.ok) {
-                    showNotification();
-                    document.getElementById("requestMessageOverlay").style.display = "none";
-                } else {
-                    showError("Failed to send your request. Please try again later.");
-                }
-            }).catch(error => {
-                showError("There was an error sending your request or message.");
-            });
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [embed] })
+                }).then(response => {
+                    if (response.ok) {
+                        showNotification();
+                        document.getElementById("requestMessageOverlay").style.display = "none";
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                    showError("There was an error sending your request or message.");
+                });
+            } else {
+                showError("Please fill in at least one field.");
+            }
         });
 
         function showNotification() {
@@ -312,14 +308,13 @@ footer {
         }
 
         function showError(message) {
-            const errorMessage = document.getElementById('error-message');
-            errorMessage.innerText = message;
-            errorMessage.style.display = 'block';
-        }
-
-        function clearError() {
-            const errorMessage = document.getElementById('error-message');
-            errorMessage.style.display = 'none';
+            const notification = document.getElementById('notification');
+            notification.style.backgroundColor = "#e74c3c";
+            notification.innerText = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
     </script>
 
