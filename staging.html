@@ -112,7 +112,7 @@
         }
 
         .modal-overlay {
-            display: none; 
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -183,7 +183,7 @@
         }
 
         .request-form {
-            display: block; /* Show by default */
+            display: block;
             margin-top: 20px;
             text-align: center;
         }
@@ -295,4 +295,87 @@
         }
 
         document.getElementById("closeRequestMessageButton").addEventListener("click", function () {
-            document.getElementById("requestMessageOverlay").sty
+            document.getElementById("requestMessageOverlay").style.display = "none";
+        });
+
+        function toggleFields() {
+            const requestType = document.getElementById("requestType").value;
+            const songRequestFields = document.getElementById("songRequestFields");
+            const messageFields = document.getElementById("messageFields");
+
+            if (requestType === "request") {
+                songRequestFields.style.display = "block";
+                messageFields.style.display = "none";
+            } else {
+                songRequestFields.style.display = "none";
+                messageFields.style.display = "block";
+            }
+        }
+
+        document.getElementById("sendRequestMessageButton").addEventListener("click", function () {
+            const userName = document.getElementById("userName").value;
+            const title = document.getElementById("songTitle").value;
+            const artist = document.getElementById("songArtist").value;
+            const userMessage = document.getElementById("userMessage").value;
+
+            let webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
+
+            if (!title && !artist && userMessage) {
+                webhookURL = 'https://discord.com/api/webhooks/1323764116250300499/mR2bkLX8xawkiH8aeN-IfDdCmRZqIpi96vy5VSyAvHW_t1dzlvmoD70i3RUD5AR9EvIh';
+            }
+
+            if (title || artist || userMessage || userName) {
+                const embed = {
+                    title: "New Request or Message",
+                    color: 16711680,
+                    fields: [
+                        { name: "Name", value: userName || "Anonymous" },
+                        { name: "Song Title", value: title || "N/A" },
+                        { name: "Artist", value: artist || "N/A" },
+                        { name: "Message", value: userMessage || "No message provided" }
+                    ],
+                    footer: { text: "Paradox Radio - Powered by tm6" }
+                };
+
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [embed] })
+                }).then(response => {
+                    if (response.ok) {
+                        showNotification();
+                        document.getElementById("requestMessageOverlay").style.display = "none";
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                    showError("There was an error sending your request or message.");
+                });
+            } else {
+                showError("Please fill in at least one field.");
+            }
+        });
+
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const notification = document.getElementById('notification');
+            notification.style.backgroundColor = "#e74c3c";
+            notification.innerText = message;
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+
+    <footer>
+        <p>&copy; 2024 Paradox Radio. All Rights Reserved. | Paradox Radio v2.0 | Made with ❤️ by Zak</p>
+    </footer>
+</body>
+</html>
