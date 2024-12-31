@@ -167,7 +167,7 @@
             <!-- Play / Pause Controls -->
             <div class="player-controls">
                 <button id="playPauseButton" class="fa fa-play" onclick="toggleRadio()"></button>
-                <button id="requestMessageButton" class="fa-solid fa-envelope"></button>
+                <button id="requestMessageButton" class="fa-solid fa-envelope" onclick="openRequestMessage()"></button>
             </div>
 
             <!-- Volume Control -->
@@ -256,9 +256,9 @@
             stream.volume = volume;
         }
 
-        document.getElementById("requestMessageButton").addEventListener("click", function () {
+        function openRequestMessage() {
             document.getElementById("requestMessageOverlay").style.display = "flex";
-        });
+        }
 
         document.getElementById("closeRequestMessageButton").addEventListener("click", function () {
             document.getElementById("requestMessageOverlay").style.display = "none";
