@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
+        crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="PR-logo-design-Graphics-31862184-1 (1).jpg">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Paradox Radio">
+    <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
+    <meta name="author" content="RadioEurope">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Paradox Radio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a202c;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            gap: 20px;
+        }
+
+        img {
+            border-radius: 10px;
+            height: 150px;
+            width: 150px;
+        }
+
+        .button-section {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .button-section button {
+            font-size: 1.5rem;
+            background: #ff5733;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .button-section button:hover {
+            transform: scale(1.1);
+        }
+
+        #nowPlaying {
+            margin-top: 10px;
+            font-size: 1.2rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .modal-box {
+            background: #2d2d2d;
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+        }
+
+        textarea,
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #555;
+            background-color: #444;
+            color: white;
+        }
+
+        .modal-button {
+            background: #0077b5;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .modal-button.close {
+            background: #e74c3c;
+        }
+
+        .modal-button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div>
+            <img src="PR-logo-design-Graphics-31862184-1 (1).jpg" onerror="this.src='default-image.jpg';">
+            <img src="Screenshot_2024-12-25_121634.webp" onerror="this.src='default-image-2.jpg';">
+        </div>
+        <p id="nowPlaying">Now Playing: Loading...</p>
+
+        <div class="button-section">
+            <button id="radioButton" class="fa-solid fa-play"></button>
+            <button id="messageButton" class="fa-solid fa-comment"></button>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageOverlay" class="modal-overlay">
+        <div id="messagePopup" class="modal-box">
+            <h2>Send a Message</h2>
+            <textarea id="userMessageInput" placeholder="Enter your message" rows="4"></textarea>
+            <button id="sendMessageButton" class="modal-button">Send Message</button>
+            <button id="closeMessagePopupButton" class="modal-button close">Close</button>
+        </div>
+    </div>
+
+    <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
+
+    <script>
+        const webhookURL = 'https://discord.com/api/webhooks/1323764116250300499/mR2bkLX8xawkiH8aeN-IfDdCmRZqIpi96vy5VSyAvHW_t1dzlvmoD70i3RUD5AR9EvIh';
+
+        // Fetch metadata and update now playing
+        setInterval(() => {
+            fetch('YOUR_API_ENDPOINT')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('nowPlaying').textContent = `Now Playing: ${data.streamTitle || 'Unknown'}`;
+                })
+                .catch(console.error);
+        }, 5000);
+
+        // Play/Pause Stream
+        document.getElementById('radioButton').addEventListener('click', () => {
+            const stream = document.getElementById('stream');
+            const button = document.getElementById('radioButton');
+            if (stream.paused) {
+                stream.play();
+                button.classList.remove('fa-play');
+                button.classList.add('fa-pause');
+            } else {
+                stream.pause();
+                button.classList.remove('fa-pause');
+                button.classList.add('fa-play');
+            }
+        });
+
+        // Open Message Modal
+        document.getElementById('messageButton').addEventListener('click', () => {
+            document.getElementById('messageOverlay').style.display = 'flex';
+        });
+
+        // Close Message Modal
+        document.getElementById('closeMessagePopupButton').addEventListener('click', () => {
+            document.getElementById('messageOverlay').style.display = 'none';
+        });
+
+        // Send Message to Webhook
+        document.getElementById('sendMessageButton').addEventListener('click', () => {
+            const userMessage = document.getElementById('userMessageInput').value;
+
+            if (userMessage.trim() !== '') {
+                fetch(webhookURL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        content: userMessage,
+                        username: 'Paradox Radio Messenger'
+                    })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Message sent successfully!');
+                            document.getElementById('messageOverlay').style.display = 'none';
+                            document.getElementById('userMessageInput').value = '';
+                        } else {
+                            alert('Failed to send the message.');
+                        }
+                    })
+                    .catch(() => alert('An error occurred.'));
+            } else {
+                alert('Please enter a message.');
+            }
+        });
+    </script>
+</body>
+
+</html>
