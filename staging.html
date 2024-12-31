@@ -137,78 +137,169 @@
         .modal-button:hover {
             opacity: 0.8;
         }
+
+        footer {
+            text-align: center;
+            color: #bbb;
+            margin-top: 50px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div>
-            <img src="PR-logo-design-Graphics-31862184-1 (1).jpg" onerror="this.src='default-image.jpg';">
-            <img src="Screenshot_2024-12-25_121634.webp" onerror="this.src='default-image-2.jpg';">
+        <!-- Header -->
+        <div class="header">
+            <h1>Paradox Radio</h1>
+            <p>Streaming the best music live</p>
         </div>
-        <p class="now-playing">Now Playing: <span id="streamTitle">Loading...</span></p>
 
-        <div class="player-controls">
-            <button id="radioButton" class="fa-solid fa-play"></button>
-            <button id="messageButton" class="fa-solid fa-comment"></button>
+        <!-- Radio Player Section -->
+        <div class="player-container">
+            <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg" alt="Radio Cover Image" />
+            <div class="now-playing">
+                Now Playing: <span id="streamTitle">Loading...</span>
+            </div>
+
+            <!-- Play / Pause Controls -->
+            <div class="player-controls">
+                <button id="playPauseButton" class="fa fa-play" onclick="toggleRadio()"></button>
+                <button id="messageButton" class="fa-solid fa-comment"></button>
+            </div>
         </div>
+
+        <!-- Request Section -->
+        <div class="request-section">
+            <!-- Request Button -->
+            <button id="openRequestButton">Request Song</button>
+
+            <!-- Discord Link -->
+            <a href="https://discord.gg/XVxaEr8pFJ" target="_blank">Join our Discord</a>
+
+            <!-- Request Song Form (will be displayed in modal) -->
+            <div id="popupOverlay" class="modal-overlay">
+                <div id="requestPopup" class="modal-box">
+                    <h2>Request a Song</h2>
+                    <input type="text" id="songTitle" placeholder="Enter song title" />
+                    <input type="text" id="songArtist" placeholder="Enter artist name" />
+                    <input type="text" id="userName" placeholder="Enter your name" />
+                    <textarea id="userMessage" placeholder="Message (optional)" rows="3"></textarea>
+                    <button id="sendRequestButton" class="modal-button">Send Request</button>
+                    <button id="closePopupButton" class="modal-button close">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Modal -->
+        <div id="messageOverlay" class="modal-overlay">
+            <div id="messagePopup" class="modal-box">
+                <h2>Send a Message</h2>
+                <textarea id="userMessageInput" placeholder="Enter your message" rows="4"></textarea>
+                <button id="sendMessageButton" class="modal-button">Send Message</button>
+                <button id="closeMessagePopupButton" class="modal-button close">Close</button>
+            </div>
+        </div>
+
+        <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
+
+        <!-- Notification Box -->
+        <div id="notification">Your song request has been sent!</div>
     </div>
-
-    <!-- Message Modal -->
-    <div id="messageOverlay" class="modal-overlay">
-        <div id="messagePopup" class="modal-box">
-            <h2>Send a Message</h2>
-            <textarea id="userMessageInput" placeholder="Enter your message" rows="4"></textarea>
-            <button id="sendMessageButton" class="modal-button">Send Message</button>
-            <button id="closeMessagePopupButton" class="modal-button close">Close</button>
-        </div>
-    </div>
-
-    <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
 
     <script>
-        const webhookURL = 'https://discord.com/api/webhooks/1323764116250300499/mR2bkLX8xawkiH8aeN-IfDdCmRZqIpi96vy5VSyAvHW_t1dzlvmoD70i3RUD5AR9EvIh';
+        const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
 
-        // Fetch metadata and update now playing
-        setInterval(() => {
-            fetch('YOUR_API_ENDPOINT')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('streamTitle').textContent = data.streamTitle || 'Unknown';
-                })
-                .catch(console.error);
-        }, 5000);
+        function updateStreamTitle(title) {
+            document.getElementById('streamTitle').innerText = title || 'No song playing';
+        }
 
-        // Play/Pause Stream
-        document.getElementById('radioButton').addEventListener('click', () => {
+        eventSource.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            if (data && data.streamTitle) {
+                updateStreamTitle(data.streamTitle);
+            }
+        };
+
+        eventSource.onerror = function () {
+            console.error('Error with EventSource');
+        };
+
+        function toggleRadio() {
             const stream = document.getElementById('stream');
-            const button = document.getElementById('radioButton');
+            const button = document.getElementById('playPauseButton');
+
             if (stream.paused) {
-                stream.play();
-                button.classList.remove('fa-play');
-                button.classList.add('fa-pause');
+                stream.play().then(() => {
+                    button.classList.remove('fa-play');
+                    button.classList.add('fa-pause');
+                }).catch(error => {
+                    console.error('Error playing audio:', error);
+                });
             } else {
                 stream.pause();
                 button.classList.remove('fa-pause');
                 button.classList.add('fa-play');
             }
+        }
+
+        document.getElementById("openRequestButton").addEventListener("click", function () {
+            document.getElementById("popupOverlay").style.display = "flex";
         });
 
-        // Open Message Modal
+        document.getElementById("closePopupButton").addEventListener("click", function () {
+            document.getElementById("popupOverlay").style.display = "none";
+        });
+
+        document.getElementById("sendRequestButton").addEventListener("click", function () {
+            const title = document.getElementById("songTitle").value;
+            const artist = document.getElementById("songArtist").value;
+            const userName = document.getElementById("userName").value;
+            const userMessage = document.getElementById("userMessage").value;
+
+            if (title && artist && userName) {
+                const embed = {
+                    title: "New Song Request",
+                    color: 16711680,
+                    fields: [
+                        { name: "Song Title", value: title },
+                        { name: "Artist", value: artist },
+                        { name: "Requested by", value: userName },
+                        { name: "Message", value: userMessage || "No message provided" }
+                    ],
+                    footer: { text: "Paradox Radio - Powered by tm6" }
+                };
+
+                fetch('https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [embed] })
+                }).then(response => {
+                    if (response.ok) {
+                        showNotification();
+                        document.getElementById("popupOverlay").style.display = "none";
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                    alert("There was an error sending your request.");
+                });
+            } else {
+                alert("Please fill in all required fields.");
+            }
+        });
+
         document.getElementById('messageButton').addEventListener('click', () => {
             document.getElementById('messageOverlay').style.display = 'flex';
         });
 
-        // Close Message Modal
         document.getElementById('closeMessagePopupButton').addEventListener('click', () => {
             document.getElementById('messageOverlay').style.display = 'none';
         });
 
-        // Send Message to Webhook
         document.getElementById('sendMessageButton').addEventListener('click', () => {
             const userMessage = document.getElementById('userMessageInput').value;
 
             if (userMessage.trim() !== '') {
-                fetch(webhookURL, {
+                fetch('https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -230,6 +321,18 @@
                 alert('Please enter a message.');
             }
         });
+
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
     </script>
+
+    <footer>
+        <p>&copy; 2024 Paradox Radio. All Rights Reserved. | Paradox Radio v2.0 | Made with ❤️ by Zak</p>
+    </footer>
 </body>
 </html>
