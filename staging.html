@@ -189,7 +189,7 @@
         }
 
         .songRequestFields, .messageFields {
-            display: none;
+            display: block;
             text-align: left;
         }
 
@@ -233,7 +233,7 @@
                     <option value="message">Send Message</option>
                 </select>
 
-                <!-- Song Request Fields -->
+                <!-- Song Request Fields (Visible by default) -->
                 <div id="songRequestFields" class="songRequestFields request-form">
                     <input type="text" id="userName" placeholder="Enter your name" />
                     <input type="text" id="songTitle" placeholder="Enter song title (optional)" />
@@ -241,7 +241,7 @@
                 </div>
 
                 <!-- Message Fields -->
-                <div id="messageFields" class="messageFields request-form">
+                <div id="messageFields" class="messageFields request-form" style="display:none;">
                     <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
                 </div>
 
