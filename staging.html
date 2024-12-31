@@ -251,6 +251,13 @@
             const artist = document.getElementById("songArtist").value;
             const userMessage = document.getElementById("userMessage").value;
 
+            let webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc'; // Default webhook for requests
+
+            if (!title && !artist && userMessage) {
+                // Use the alternate webhook for messages only
+                webhookURL = 'https://discord.com/api/webhooks/1323764116250300499/mR2bkLX8xawkiH8aeN-IfDdCmRZqIpi96vy5VSyAvHW_t1dzlvmoD70i3RUD5AR9EvIh';
+            }
+
             if (title || artist || userMessage) {
                 const embed = {
                     title: "New Request or Message",
@@ -263,7 +270,7 @@
                     footer: { text: "Paradox Radio - Powered by tm6" }
                 };
 
-                fetch('https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc', {
+                fetch(webhookURL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ embeds: [embed] })
