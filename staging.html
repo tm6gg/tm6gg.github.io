@@ -140,34 +140,6 @@
             opacity: 0.8;
         }
 
-        .request-section {
-            background-color: #2D2D2D;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            width: 80%;
-            max-width: 600px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .request-section button,
-        .request-section a {
-            display: block;
-            margin: 10px auto;
-            text-align: center;
-            font-size: 1rem;
-            text-decoration: none;
-        }
-
-        .request-section a {
-            color: #0077b5;
-            font-weight: bold;
-        }
-
-        .request-section a:hover {
-            text-decoration: underline;
-        }
-
         footer {
             text-align: center;
             color: #bbb;
@@ -208,46 +180,26 @@
             <!-- Play / Pause Controls -->
             <div class="player-controls">
                 <button id="playPauseButton" class="fa fa-play" onclick="toggleRadio()"></button>
-                <button id="messageButton" class="fa-solid fa-comment"></button>
+                <button id="requestMessageButton" class="fa-solid fa-envelope"></button>
             </div>
         </div>
 
-        <!-- Request Section -->
-        <div class="request-section">
-            <!-- Request Button -->
-            <button id="openRequestButton">Request Song</button>
-
-            <!-- Discord Link -->
-            <a href="https://discord.gg/XVxaEr8pFJ" target="_blank">Join our Discord</a>
-
-            <!-- Request Song Form (will be displayed in modal) -->
-            <div id="popupOverlay" class="modal-overlay">
-                <div id="requestPopup" class="modal-box">
-                    <h2>Request a Song</h2>
-                    <input type="text" id="songTitle" placeholder="Enter song title" />
-                    <input type="text" id="songArtist" placeholder="Enter artist name" />
-                    <input type="text" id="userName" placeholder="Enter your name" />
-                    <textarea id="userMessage" placeholder="Message (optional)" rows="3"></textarea>
-                    <button id="sendRequestButton" class="modal-button">Send Request</button>
-                    <button id="closePopupButton" class="modal-button close">Close</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Message Modal -->
-        <div id="messageOverlay" class="modal-overlay">
-            <div id="messagePopup" class="modal-box">
-                <h2>Send a Message</h2>
-                <textarea id="userMessageInput" placeholder="Enter your message" rows="4"></textarea>
-                <button id="sendMessageButton" class="modal-button">Send Message</button>
-                <button id="closeMessagePopupButton" class="modal-button close">Close</button>
+        <!-- Request and Message Modal -->
+        <div id="requestMessageOverlay" class="modal-overlay">
+            <div id="requestMessagePopup" class="modal-box">
+                <h2>Request a Song or Send a Message</h2>
+                <input type="text" id="songTitle" placeholder="Enter song title (optional)" />
+                <input type="text" id="songArtist" placeholder="Enter artist name (optional)" />
+                <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
+                <button id="sendRequestMessageButton" class="modal-button">Send</button>
+                <button id="closeRequestMessageButton" class="modal-button close">Close</button>
             </div>
         </div>
 
         <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
 
         <!-- Notification Box -->
-        <div id="notification">Your song request has been sent!</div>
+        <div id="notification">Your request or message has been sent!</div>
     </div>
 
     <script>
@@ -286,18 +238,60 @@
             }
         }
 
-        document.getElementById("openRequestButton").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "flex";
+        document.getElementById("requestMessageButton").addEventListener("click", function () {
+            document.getElementById("requestMessageOverlay").style.display = "flex";
         });
 
-        document.getElementById("closePopupButton").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "none";
+        document.getElementById("closeRequestMessageButton").addEventListener("click", function () {
+            document.getElementById("requestMessageOverlay").style.display = "none";
         });
 
-        document.getElementById("sendRequestButton").addEventListener("click", function () {
+        document.getElementById("sendRequestMessageButton").addEventListener("click", function () {
             const title = document.getElementById("songTitle").value;
             const artist = document.getElementById("songArtist").value;
-            const userName = document.getElementById("userName").value;
             const userMessage = document.getElementById("userMessage").value;
 
-            if (title && artist && userName
+            if (title || artist || userMessage) {
+                const embed = {
+                    title: "New Request or Message",
+                    color: 16711680,
+                    fields: [
+                        { name: "Song Title", value: title || "N/A" },
+                        { name: "Artist", value: artist || "N/A" },
+                        { name: "Message", value: userMessage || "No message provided" }
+                    ],
+                    footer: { text: "Paradox Radio - Powered by tm6" }
+                };
+
+                fetch('https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ embeds: [embed] })
+                }).then(response => {
+                    if (response.ok) {
+                        showNotification();
+                        document.getElementById("requestMessageOverlay").style.display = "none";
+                    }
+                }).catch(error => {
+                    console.error("Error:", error);
+                    alert("There was an error sending your request or message.");
+                });
+            } else {
+                alert("Please fill in at least one field.");
+            }
+        });
+
+        function showNotification() {
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+
+    <footer>
+        <p>&copy; 2024 Paradox Radio. All Rights Reserved. | Paradox Radio v2.0 | Made with ❤️ by Zak</p>
+    </footer>
+</body>
+</html>
