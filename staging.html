@@ -1,53 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" dir="ltr">
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1820070406301984"
-        crossorigin="anonymous"></script>
-    <link rel="icon" type="image/x-icon" href="PR-logo-design-Graphics-31862184-1 (1).jpg">
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Paradox Radio">
-    <meta name="keywords" content="radio, web radio, online radio, radioeurope, europe, news, radio news, aurora, auroradiscord">
+    <meta name="keywords" content="radio, web radio, online radio, music, songs, stream">
     <meta name="author" content="RadioEurope">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Paradox Radio</title>
+
+    <!-- Google Fonts for Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="PR-logo-design-Graphics-31862184-1 (1).jpg">
+
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: white;
             margin: 0;
             padding: 0;
-            background-color: #1a202c;
-            color: white;
+            overflow-x: hidden;
         }
 
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            padding: 20px;
             min-height: 100vh;
             text-align: center;
             gap: 20px;
         }
 
-        img {
-            border-radius: 10px;
-            height: 150px;
-            width: 150px;
-        }
-
-        .button-section {
+        .player-container {
+            background-color: #2D2D2D;
+            border-radius: 15px;
+            padding: 30px;
+            width: 80%;
+            max-width: 600px;
             display: flex;
-            gap: 20px;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.6);
         }
 
-        .button-section button {
+        .player-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .now-playing {
+            font-size: 1.2rem;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .player-controls button {
             font-size: 1.5rem;
-            background: #ff5733;
+            background: #FF5733;
             color: white;
             border: none;
             border-radius: 50%;
@@ -60,13 +84,8 @@
             transition: transform 0.2s ease-in-out;
         }
 
-        .button-section button:hover {
+        .player-controls button:hover {
             transform: scale(1.1);
-        }
-
-        #nowPlaying {
-            margin-top: 10px;
-            font-size: 1.2rem;
         }
 
         .modal-overlay {
@@ -83,7 +102,7 @@
         }
 
         .modal-box {
-            background: #2d2d2d;
+            background: #2D2D2D;
             color: white;
             border-radius: 10px;
             padding: 20px;
@@ -120,16 +139,15 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <div>
             <img src="PR-logo-design-Graphics-31862184-1 (1).jpg" onerror="this.src='default-image.jpg';">
             <img src="Screenshot_2024-12-25_121634.webp" onerror="this.src='default-image-2.jpg';">
         </div>
-        <p id="nowPlaying">Now Playing: Loading...</p>
+        <p class="now-playing">Now Playing: <span id="streamTitle">Loading...</span></p>
 
-        <div class="button-section">
+        <div class="player-controls">
             <button id="radioButton" class="fa-solid fa-play"></button>
             <button id="messageButton" class="fa-solid fa-comment"></button>
         </div>
@@ -155,7 +173,7 @@
             fetch('YOUR_API_ENDPOINT')
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('nowPlaying').textContent = `Now Playing: ${data.streamTitle || 'Unknown'}`;
+                    document.getElementById('streamTitle').textContent = data.streamTitle || 'Unknown';
                 })
                 .catch(console.error);
         }, 5000);
@@ -214,5 +232,4 @@
         });
     </script>
 </body>
-
 </html>
