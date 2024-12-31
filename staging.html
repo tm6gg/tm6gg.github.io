@@ -163,7 +163,7 @@
         }
 
         .modal-box {
-            background: #333;
+            background: #2D2D2D;
             padding: 30px;
             border-radius: 10px;
             width: 80%;
@@ -187,7 +187,37 @@
             background-color: #FF3C00;
         }
 
-        /* Hide form fields by default */
+        /* Style the select dropdown */
+        select {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        /* Style the input fields */
+        input[type="text"], textarea {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
         .request-form {
             display: none;  /* Hidden by default */
             margin-top: 20px;
