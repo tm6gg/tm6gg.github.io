@@ -87,83 +87,41 @@
             transform: scale(1.1);
         }
 
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .modal-box {
-            background: #2D2D2D;
-            color: white;
-            border-radius: 10px;
-            padding: 20px;
+        /* Volume Bar */
+        .volume-container {
+            display: none;  /* Hidden by default */
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
             text-align: center;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
 
-        textarea,
-        input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: #555;
             border-radius: 5px;
-            border: 1px solid #555;
-            background-color: #444;
-            color: white;
-        }
-
-        select {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #555;
-            background-color: #444;
-            color: white;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        }
-
-        select:focus {
             outline: none;
-            border-color: #FF5733;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
-        select option {
-            background-color: #444;
-            color: white;
-        }
-
-        .modal-button {
-            background: #0077b5;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            border: none;
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #FF5733;
+            border-radius: 50%;
             cursor: pointer;
-            margin: 5px 0;
         }
 
-        .modal-button.close {
-            background: #e74c3c;
-        }
-
-        .modal-button:hover {
-            opacity: 0.8;
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #FF5733;
+            border-radius: 50%;
+            cursor: pointer;
         }
 
         footer {
@@ -210,6 +168,12 @@
             <div class="player-controls">
                 <button id="playPauseButton" class="fa fa-play" onclick="toggleRadio()"></button>
                 <button id="requestMessageButton" class="fa-solid fa-envelope"></button>
+            </div>
+
+            <!-- Volume Control -->
+            <div id="volumeContainer" class="volume-container">
+                <label for="volume">Volume</label>
+                <input type="range" id="volume" min="0" max="1" step="0.01" value="0.5" onchange="changeVolume()">
             </div>
         </div>
 
@@ -268,11 +232,13 @@
         function toggleRadio() {
             const stream = document.getElementById('stream');
             const button = document.getElementById('playPauseButton');
+            const volumeContainer = document.getElementById('volumeContainer');
 
             if (stream.paused) {
                 stream.play().then(() => {
                     button.classList.remove('fa-play');
                     button.classList.add('fa-pause');
+                    volumeContainer.style.display = "block";  // Show volume control
                 }).catch(error => {
                     console.error('Error playing audio:', error);
                 });
@@ -280,7 +246,14 @@
                 stream.pause();
                 button.classList.remove('fa-pause');
                 button.classList.add('fa-play');
+                volumeContainer.style.display = "none";  // Hide volume control
             }
+        }
+
+        function changeVolume() {
+            const stream = document.getElementById('stream');
+            const volume = document.getElementById('volume').value;
+            stream.volume = volume;
         }
 
         document.getElementById("requestMessageButton").addEventListener("click", function () {
