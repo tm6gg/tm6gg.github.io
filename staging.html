@@ -147,6 +147,13 @@
             font-size: 1.1rem;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
+
+        /* Hide form fields by default */
+        .request-form {
+            display: none;  /* Hidden by default */
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -189,14 +196,14 @@
                 </select>
 
                 <!-- Song Request Fields -->
-                <div id="songRequestFields">
+                <div id="songRequestFields" class="request-form">
                     <input type="text" id="userName" placeholder="Enter your name" />
                     <input type="text" id="songTitle" placeholder="Enter song title (optional)" />
                     <input type="text" id="songArtist" placeholder="Enter artist name (optional)" />
                 </div>
 
                 <!-- Message Fields -->
-                <div id="messageFields" style="display: none;">
+                <div id="messageFields" class="request-form">
                     <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
                 </div>
 
