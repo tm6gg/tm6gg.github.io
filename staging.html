@@ -35,6 +35,12 @@
             gap: 20px;
         }
 
+        .header {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
         .player-container {
             background-color: #2D2D2D;
             border-radius: 15px;
@@ -147,149 +153,96 @@
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.2rem;
-            margin-top: 20px;
-            transition: background-color 0.3s;
+        }
+
+        .modal-button.close {
+            background-color: #e74c3c;
         }
 
         .modal-button:hover {
-            background-color: #FF3C00;
+            opacity: 0.8;
         }
 
-        select {
-            background-color: #333;
-            color: white;
+        select, textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
             border: 1px solid #555;
+            background-color: #444;
+            color: white;
+        }
+
+        .modal-button {
+            width: 100%;
             padding: 10px;
             border-radius: 5px;
-            width: 50%;
-            margin-bottom: 20px;
-            font-size: 1rem;
-            appearance: none;
+            border: none;
+            background-color: #0077b5;
+            color: white;
             cursor: pointer;
         }
 
-        input[type="text"], textarea {
-            background-color: #333;
-            color: white;
-            border: 1px solid #555;
-            padding: 10px;
-            border-radius: 5px;
-            width: 80%;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .request-form {
-            display: block;
-            margin-top: 20px;
-            text-align: center;
-        }
-
-        .songRequestFields, .messageFields {
-            display: block;
-            text-align: left;
-        }
-
-        .songRequestFields input, .songRequestFields textarea {
-            width: 80%;
+        .modal-button.close {
+            background-color: #e74c3c;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <h1>Paradox Radio</h1>
             <p>Streaming the best music live</p>
         </div>
 
-        <!-- Radio Player Section -->
         <div class="player-container">
             <img id="cover" src="PR-logo-design-Graphics-31862184-1 (1).jpg" alt="Radio Cover Image" />
             <div class="now-playing">
                 Now Playing: <span id="streamTitle">Loading...</span>
             </div>
 
-            <!-- Play / Pause Controls -->
             <div class="player-controls">
                 <button id="playPauseButton" class="fa fa-play" onclick="toggleRadio()"></button>
+                <button id="requestMessageButton" class="fa-solid fa-envelope" onclick="openRequestModal()"></button>
             </div>
 
             <!-- Volume Slider -->
-            <input id="volumeSlider" type="range" min="0" max="100" value="100" class="volume-slider" onchange="adjustVolume()">
+            <input type="range" id="volume" class="volume-slider" min="0" max="1" step="0.1" value="1" onchange="adjustVolume()" />
         </div>
-
-        <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
 
         <!-- Request and Message Modal -->
         <div id="requestMessageOverlay" class="modal-overlay">
             <div id="requestMessagePopup" class="modal-box">
                 <h2>Request a Song or Send a Message</h2>
-
-                <!-- Request Type Selector -->
-                <select id="requestType" onchange="toggleFields()">
-                    <option value="request">Song Request</option>
-                    <option value="message">Send Message</option>
-                </select>
-
-                <!-- Song Request Fields (Visible by default) -->
-                <div id="songRequestFields" class="songRequestFields request-form">
-                    <input type="text" id="userName" placeholder="Enter your name" />
-                    <input type="text" id="songTitle" placeholder="Enter song title (optional)" />
-                    <input type="text" id="songArtist" placeholder="Enter artist name (optional)" />
-                </div>
-
-                <!-- Message Fields -->
-                <div id="messageFields" class="messageFields request-form" style="display:none;">
-                    <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
-                </div>
-
+                <input type="text" id="personName" placeholder="Enter your name" />
+                <input type="text" id="songTitle" placeholder="Enter song title (optional)" />
+                <input type="text" id="songArtist" placeholder="Enter artist name (optional)" />
+                <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
                 <button id="sendRequestMessageButton" class="modal-button">Send</button>
-                <button id="closeRequestMessageButton" class="modal-button close">Close</button>
+                <button id="closeRequestMessageButton" class="modal-button close" onclick="closeRequestModal()">Close</button>
             </div>
         </div>
 
-        <!-- Notification Box -->
+        <audio id="stream" src="https://stream.zeno.fm/jw92zlb8aobvv" preload="auto"></audio>
+
         <div id="notification">Your request or message has been sent!</div>
     </div>
 
+    <footer>
+        <p>&copy; 2024 Paradox Radio. All Rights Reserved. | Paradox Radio v2.0 | Made with ❤️ by Zak</p>
+    </footer>
+
     <script>
-        const eventSource = new EventSource("https://api.zeno.fm/mounts/metadata/subscribe/jw92zlb8aobvv");
-
-        function updateStreamTitle(title) {
-            document.getElementById('streamTitle').innerText = title || 'No song playing';
-        }
-
-        eventSource.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            if (data && data.streamTitle) {
-                updateStreamTitle(data.streamTitle);
-            }
-        };
-
-        eventSource.onerror = function () {
-            console.error('Error with EventSource');
-        };
-
         function toggleRadio() {
             const stream = document.getElementById('stream');
             const button = document.getElementById('playPauseButton');
-            const volumeSlider = document.getElementById('volumeSlider');
+            const volumeSlider = document.getElementById('volume');
 
             if (stream.paused) {
                 stream.play().then(() => {
                     button.classList.remove('fa-play');
                     button.classList.add('fa-pause');
-                    document.querySelector('.volume-slider').style.display = 'block';
+                    volumeSlider.style.display = 'block'; // Show the volume slider when playing
                 }).catch(error => {
                     console.error('Error playing audio:', error);
                 });
@@ -297,102 +250,39 @@
                 stream.pause();
                 button.classList.remove('fa-pause');
                 button.classList.add('fa-play');
-                document.querySelector('.volume-slider').style.display = 'none';
+                volumeSlider.style.display = 'none'; // Hide the volume slider when paused
             }
         }
 
         function adjustVolume() {
             const stream = document.getElementById('stream');
-            const volumeSlider = document.getElementById('volumeSlider');
-            stream.volume = volumeSlider.value / 100;
+            const volumeSlider = document.getElementById('volume');
+            stream.volume = volumeSlider.value;
         }
 
-        function openRequestMessage() {
+        function openRequestModal() {
             document.getElementById("requestMessageOverlay").style.display = "flex";
         }
 
-        document.getElementById("closeRequestMessageButton").addEventListener("click", function () {
+        function closeRequestModal() {
             document.getElementById("requestMessageOverlay").style.display = "none";
-        });
-
-        function toggleFields() {
-            const requestType = document.getElementById("requestType").value;
-            const songRequestFields = document.getElementById("songRequestFields");
-            const messageFields = document.getElementById("messageFields");
-
-            if (requestType === "request") {
-                songRequestFields.style.display = "block";
-                messageFields.style.display = "none";
-            } else {
-                songRequestFields.style.display = "none";
-                messageFields.style.display = "block";
-            }
         }
 
         document.getElementById("sendRequestMessageButton").addEventListener("click", function () {
-            const userName = document.getElementById("userName").value;
+            const name = document.getElementById("personName").value;
             const title = document.getElementById("songTitle").value;
             const artist = document.getElementById("songArtist").value;
             const userMessage = document.getElementById("userMessage").value;
 
-            let webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
+            // Here, send the data to the server or to the webhook
+            console.log("Sending request for:", name, title, artist, userMessage);
 
-            if (!title && !artist && userMessage) {
-                webhookURL = 'https://discord.com/api/webhooks/1323764116250300499/mR2bkLX8xawkiH8aeN-IfDdCmRZqIpi96vy5VSyAvHW_t1dzlvmoD70i3RUD5AR9EvIh';
-            }
-
-            if (title || artist || userMessage || userName) {
-                const embed = {
-                    title: "New Request or Message",
-                    color: 16711680,
-                    fields: [
-                        { name: "Name", value: userName || "Anonymous" },
-                        { name: "Song Title", value: title || "N/A" },
-                        { name: "Artist", value: artist || "N/A" },
-                        { name: "Message", value: userMessage || "No message provided" }
-                    ],
-                    footer: { text: "Paradox Radio - Powered by tm6" }
-                };
-
-                fetch(webhookURL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ embeds: [embed] })
-                }).then(response => {
-                    if (response.ok) {
-                        showNotification();
-                        document.getElementById("requestMessageOverlay").style.display = "none";
-                    }
-                }).catch(error => {
-                    console.error("Error:", error);
-                    showError("There was an error sending your request or message.");
-                });
-            } else {
-                showError("Please fill in at least one field.");
-            }
+            document.getElementById("notification").style.display = 'block';
+            setTimeout(() => {
+                document.getElementById("notification").style.display = 'none';
+                closeRequestModal();
+            }, 3000);
         });
-
-        function showNotification() {
-            const notification = document.getElementById('notification');
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
-
-        function showError(message) {
-            const notification = document.getElementById('notification');
-            notification.style.backgroundColor = "#e74c3c";
-            notification.innerText = message;
-            notification.style.display = 'block';
-            setTimeout(() => {
-                notification.style.display = 'none';
-            }, 3000);
-        }
     </script>
-
-    <footer>
-        <p>&copy; 2024 Paradox Radio. All Rights Reserved. | Paradox Radio v2.0 | Made with ❤️ by Zak</p>
-    </footer>
 </body>
 </html>
