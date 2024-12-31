@@ -8,12 +8,8 @@
     <meta name="author" content="RadioEurope">
     <title>Paradox Radio</title>
 
-    <!-- Google Fonts for Typography -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <!-- Favicon -->
     <link rel="icon" href="PR-logo-design-Graphics-31862184-1 (1).jpg">
 
     <style>
@@ -34,7 +30,7 @@
         flex-direction: column;
         align-items: center;
         padding: 20px;
-        flex: 1; /* Takes remaining space */
+        flex: 1;
         text-align: center;
         gap: 20px;
       }
@@ -151,7 +147,7 @@
         padding: 20px;
         background-color: #1a1a1a;
         width: 100%;
-        margin-top: auto; /* Ensures it stays at the bottom */
+        margin-top: auto;
       }
 
       #notification {
@@ -167,7 +163,6 @@
         font-size: 1.1rem;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
       }
-
     </style>
 </head>
 <body>
@@ -196,10 +191,25 @@
         <div id="requestMessageOverlay" class="modal-overlay">
             <div id="requestMessagePopup" class="modal-box">
                 <h2>Request a Song or Send a Message</h2>
-                <input type="text" id="userName" placeholder="Enter your name" />
-                <input type="text" id="songTitle" placeholder="Enter song title (optional)" />
-                <input type="text" id="songArtist" placeholder="Enter artist name (optional)" />
-                <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
+
+                <!-- Request Type Selector -->
+                <select id="requestType" onchange="toggleFields()">
+                    <option value="request">Song Request</option>
+                    <option value="message">Send Message</option>
+                </select>
+
+                <!-- Song Request Fields -->
+                <div id="songRequestFields">
+                    <input type="text" id="userName" placeholder="Enter your name" />
+                    <input type="text" id="songTitle" placeholder="Enter song title (optional)" />
+                    <input type="text" id="songArtist" placeholder="Enter artist name (optional)" />
+                </div>
+
+                <!-- Message Fields -->
+                <div id="messageFields" style="display: none;">
+                    <textarea id="userMessage" placeholder="Enter your message" rows="4"></textarea>
+                </div>
+
                 <button id="sendRequestMessageButton" class="modal-button">Send</button>
                 <button id="closeRequestMessageButton" class="modal-button close">Close</button>
             </div>
@@ -255,16 +265,28 @@
             document.getElementById("requestMessageOverlay").style.display = "none";
         });
 
+        function toggleFields() {
+            const requestType = document.getElementById("requestType").value;
+            const songRequestFields = document.getElementById("songRequestFields");
+            const messageFields = document.getElementById("messageFields");
+
+            if (requestType === "request") {
+                songRequestFields.style.display = "block";
+                messageFields.style.display = "none";
+            } else {
+                songRequestFields.style.display = "none";
+                messageFields.style.display = "block";
+            }
+        }
+
         document.getElementById("sendRequestMessageButton").addEventListener("click", function () {
             const userName = document.getElementById("userName").value;
             const title = document.getElementById("songTitle").value;
             const artist = document.getElementById("songArtist").value;
             const userMessage = document.getElementById("userMessage").value;
-
-            let webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc'; // Default webhook for requests
+            let webhookURL = 'https://discord.com/api/webhooks/1322520664724475904/drfeaf92iZSHpEptInUYhzVv99-pyX7xz7mrNjy86PJfpP3G3rTAc0ToBm1NVASPeHyc';
 
             if (!title && !artist && userMessage) {
-                // Use the alternate webhook for messages only
                 webhookURL = 'https://discord.com/api/webhooks/1323764116250300499/mR2bkLX8xawkiH8aeN-IfDdCmRZqIpi96vy5VSyAvHW_t1dzlvmoD70i3RUD5AR9EvIh';
             }
 
